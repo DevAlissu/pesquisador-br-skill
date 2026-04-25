@@ -115,6 +115,12 @@ jobs:
           print(ref)
           "
 
+      - name: Auto-test — valida_referencias.py
+        run: python scripts/valida_referencias.py --teste
+
+      - name: Auto-test — busca_bdtd.py (valida_endpoint, _extrair_ano, formatar_autor_abnt)
+        run: python scripts/busca_bdtd.py --teste
+
   validate-templates:
     name: Valida templates markdown
     runs-on: ubuntu-latest
