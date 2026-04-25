@@ -21,7 +21,7 @@ def resolver_doi(doi: str) -> dict:
     doi = doi.strip().replace('https://doi.org/', '').replace('http://dx.doi.org/', '')
     url = CROSSREF_API + quote(doi, safe='/')
 
-    req = Request(url, headers={'User-Agent': 'pesquisador-br-skill/0.1 (mailto:contato@example.com)'})
+    req = Request(url, headers={'User-Agent': 'pesquisador-br-skill/0.1 (https://github.com/DevAlissu/pesquisador-br-skill)'})
     try:
         with urlopen(req, timeout=15) as resp:
             data = json.loads(resp.read())

@@ -186,7 +186,7 @@ LaTeX em `templates/latex/`:
 - `cnpq-cv-grupos.md` — Diretório de Grupos + bolsas
 
 ### `references/metodologia/`
-- `autores-classicos.md` — Gil, Marconi & Lakatos, Minayo, Bardin, Triviños...
+- `autores-classicos-br.md` — Gil, Marconi & Lakatos, Minayo, Bardin, Triviños... (baseline, não restrição)
 - `tipos-pesquisa.md` — Natureza, abordagem, objetivos, procedimentos
 - `prisma-pt.md` — PRISMA traduzido
 - `analise-conteudo-bardin.md` — Pré-análise, exploração, tratamento

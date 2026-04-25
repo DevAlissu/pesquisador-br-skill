@@ -19,7 +19,7 @@ Guia detalhado pra instalar a skill no Claude Code.
 No Claude Code, execute:
 
 ```bash
-/plugin marketplace add https://github.com/SEU-USUARIO/pesquisador-br-skill
+/plugin marketplace add https://github.com/DevAlissu/pesquisador-br-skill
 ```
 
 ### Passo 2: Instalar plugin
@@ -49,7 +49,7 @@ Se a skill `pesquisador-br` for invocada (você verá a notificação), está fu
 ### Passo 1: Clonar repositório
 
 ```bash
-git clone https://github.com/SEU-USUARIO/pesquisador-br-skill.git
+git clone https://github.com/DevAlissu/pesquisador-br-skill.git
 cd pesquisador-br-skill
 ```
 
@@ -101,23 +101,19 @@ Agora qualquer mudança no diretório do projeto reflete na skill instalada.
 
 ## Configuração adicional
 
-### Variáveis de ambiente (opcional)
+### Variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto pra configurar serviços externos:
+A skill **não exige variáveis de ambiente** pra funcionar — todos os scripts usam APIs públicas sem autenticação:
 
-```env
-# Para integração com bases de dados acadêmicas
-SCIELO_API_KEY=
-PERIODICOS_CAPES_TOKEN=
+- **SciELO**: API pública, sem key
+- **CrossRef**: API pública, sem key (User-Agent já configurado no script)
+- **BDTD/IBICT**: acesso direto via web
 
-# Para CrossRef (DOI → referência)
-CROSSREF_USER_AGENT=pesquisador-br-skill/0.1 (mailto:seu@email.br)
+**Periódicos CAPES** usa autenticação federada (CAFe/Shibboleth com SAML), não token. O acesso é feito pelo navegador do usuário no portal oficial — nenhuma integração programática direta é possível sem credencial institucional.
 
-# Para Anthropic API (caso queira usar Claude diretamente)
-ANTHROPIC_API_KEY=
-```
+**Sucupira (Qualis CAPES)**: não tem API pública. Consulta manual via web (o script `verifica_qualis.py` apenas guia o usuário).
 
-⚠️ **Nunca commite** esse arquivo no git. Está no `.gitignore`.
+Se quiser usar a skill com Claude API direto (fora do Claude Code), aí sim precisa de `ANTHROPIC_API_KEY` — mas isso é uso avançado, não requisito.
 
 ### Scripts Python
 
@@ -176,7 +172,7 @@ Use a skill pesquisador-br pra me ajudar com [tema]
 
 # Remover e adicionar de novo
 /plugin marketplace remove pesquisador-br-skill
-/plugin marketplace add https://github.com/SEU-USUARIO/pesquisador-br-skill
+/plugin marketplace add https://github.com/DevAlissu/pesquisador-br-skill
 ```
 
 ### Skill carregada mas comportamento estranho

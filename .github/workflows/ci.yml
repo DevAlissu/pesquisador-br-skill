@@ -6,12 +6,18 @@ on:
   pull_request:
     branches: [master, main]
 
+permissions:
+  contents: read
+
 jobs:
   validate-skills:
     name: Valida estrutura das skills
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      # actions/checkout@v4.1.7 — pinned por SHA pra mitigar tag-jacking
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
       - name: Verificar SKILL.md em cada skill
         run: |
@@ -41,14 +47,28 @@ jobs:
             echo "✅ $skill"
           done
 
+      - name: Verificar referencias declaradas no plugin existem
+        run: |
+          if [ -f .claude-plugin/plugin.json ]; then
+            for skill_path in $(grep -o '"skills/[^"]*"' .claude-plugin/plugin.json | tr -d '"'); do
+              if [ ! -d "$skill_path" ]; then
+                echo "❌ plugin.json declara $skill_path mas o diretorio nao existe"
+                exit 1
+              fi
+              echo "✅ $skill_path"
+            done
+          fi
+
   validate-python:
     name: Valida scripts Python
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      # actions/setup-python@v5.2.0
+      - uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3
         with:
           python-version: '3.11'
 
@@ -59,13 +79,51 @@ jobs:
             echo "✅ $script"
           done
 
+      - name: Golden test — formatar_referencia_abnt
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'scripts')
+          from busca_scielo import formatar_referencia_abnt
+
+          # Caso conhecido: artigo de Costa & Silva, Rev Bras Educacao 2020
+          art = {
+              'autores': ['Costa, Ana Maria', 'Silva, Bruno Carlos'],
+              'titulo': 'Educacao inclusiva no Brasil: desafios atuais',
+              'periodico': 'Revista Brasileira de Educacao',
+              'ano': '2020',
+              'volume': '25',
+              'numero': '80',
+              'paginas': '123-145',
+              'doi': '10.1590/exemplo',
+          }
+          ref = formatar_referencia_abnt(art)
+          esperado_partes = [
+              'COSTA, Ana Maria',
+              'SILVA, Bruno Carlos',
+              'Educacao inclusiva',
+              '**Revista Brasileira de Educacao**',
+              'v. 25',
+              'n. 80',
+              'p. 123-145',
+              '2020',
+              'DOI: 10.1590/exemplo',
+          ]
+          for parte in esperado_partes:
+              assert parte in ref, f'Faltou {parte!r} na referencia: {ref!r}'
+          print('✅ Golden test passou:')
+          print(ref)
+          "
+
   validate-templates:
     name: Valida templates markdown
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: Verificar templates existem e não estão vazios
+      - name: Verificar templates existem e nao estao vazios
         run: |
           for template in skills/pesquisador-br/templates/*.md; do
             if [ ! -s "$template" ]; then

@@ -32,14 +32,14 @@ Essa é a primeira skill 100% BR pro Claude Code. Construída sintetizando o mel
 ### Instalação via plugin (recomendado)
 
 ```bash
-/plugin marketplace add https://github.com/SEU-USUARIO/pesquisador-br-skill
+/plugin marketplace add https://github.com/DevAlissu/pesquisador-br-skill
 /plugin install pesquisador-br-skill
 ```
 
 ### Instalação manual
 
 ```bash
-git clone https://github.com/SEU-USUARIO/pesquisador-br-skill.git
+git clone https://github.com/DevAlissu/pesquisador-br-skill.git
 cp -r pesquisador-br-skill/skills/* ~/.claude/skills/
 ```
 
