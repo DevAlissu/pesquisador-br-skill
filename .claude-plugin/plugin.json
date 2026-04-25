@@ -1,0 +1,14 @@
+{
+  "name": "pesquisador-br-skill",
+  "version": "0.1.0",
+  "description": "Skill brasileira de pesquisa acadêmica — ABNT, Qualis CAPES, Lattes, SciELO, BDTD, Periódicos CAPES",
+  "author": "Alison Silva (DevAlissu)",
+  "license": "MIT",
+  "homepage": "https://github.com/DevAlissu/pesquisador-br-skill",
+  "skills": [
+    "skills/pesquisador-br",
+    "skills/revisao-sistematica-br",
+    "skills/revisor-pares-br",
+    "skills/tcc-abnt"
+  ]
+}

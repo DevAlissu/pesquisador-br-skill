@@ -1,0 +1,49 @@
+# Diretórios de saída de trabalhos
+saidas/
+output/
+writing_outputs/
+generated/
+
+# Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+.pytest_cache/
+
+# Ambientes
+.env
+.venv
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# LaTeX intermediários
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Node (se houver scripts JS)
+node_modules/
+
+# Drafts privados
+drafts/private/
+*.draft.md

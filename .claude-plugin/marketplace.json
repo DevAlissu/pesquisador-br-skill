@@ -1,0 +1,30 @@
+{
+  "name": "pesquisador-br-skill",
+  "version": "0.1.0",
+  "description": "Skill brasileira de pesquisa acadêmica para Claude Code — ABNT, Qualis CAPES, Lattes, SciELO",
+  "author": {
+    "name": "Alison Silva (DevAlissu)",
+    "url": "https://github.com/DevAlissu"
+  },
+  "homepage": "https://github.com/DevAlissu/pesquisador-br-skill",
+  "license": "MIT",
+  "keywords": [
+    "academic-research",
+    "abnt",
+    "brazilian",
+    "portuguese",
+    "capes",
+    "qualis",
+    "scielo",
+    "lattes",
+    "claude-code",
+    "skill"
+  ],
+  "plugins": [
+    {
+      "name": "pesquisador-br-skill",
+      "source": ".",
+      "description": "Pipeline completo de pesquisa acadêmica brasileira (ABNT, Qualis CAPES, plataformas BR)"
+    }
+  ]
+}
