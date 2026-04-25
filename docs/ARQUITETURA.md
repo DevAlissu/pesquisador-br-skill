@@ -18,23 +18,24 @@ pesquisador-br-skill/
 │   ├── USO.md
 │   ├── ARQUITETURA.md
 │   ├── CONTRIBUINDO.md
-│   ├── abnt/
-│   ├── qualis/
-│   ├── plataformas/
-│   ├── metodologia/
-│   └── revistas/
+│   ├── abnt/README.md           # Índice -> skills/.../references/abnt/
+│   ├── qualis/README.md         # Índice -> skills/.../references/qualis/
+│   ├── plataformas/README.md    # Índice -> skills/.../references/plataformas/
+│   ├── metodologia/README.md    # Índice -> skills/.../references/metodologia/
+│   └── revistas/README.md       # Índice -> skills/.../references/revistas/
 │
 ├── skills/                      # Skills do plugin
 │   ├── pesquisador-br/          # Skill principal (orquestrador)
-│   ├── revisao-sistematica-br/  # PRISMA-PT, integrativa, metanálise
+│   ├── revisao-sistematica-br/  # PRISMA-PT, integrativa, scoping
 │   ├── revisor-pares-br/        # Peer review estilo Qualis
 │   └── tcc-abnt/                # TCC graduação completo
 │
-├── scripts/                     # Utilitários Python
-│   ├── busca_scielo.py
-│   ├── doi_para_referencia.py
-│   ├── verifica_qualis.py
-│   └── ...
+├── scripts/                     # Utilitários Python (stdlib only)
+│   ├── busca_scielo.py          # ArticleMeta API por ISSN
+│   ├── busca_bdtd.py            # OAI-PMH (UFRGS Lume + outros)
+│   ├── doi_para_referencia.py   # CrossRef -> ABNT 6023
+│   ├── valida_referencias.py    # Heurística de formato ABNT
+│   └── verifica_qualis.py       # Guia de consulta Sucupira
 │
 ├── .github/workflows/           # CI/CD
 │   └── ci.yml                   # Validação de estrutura
@@ -102,50 +103,65 @@ skills/pesquisador-br/
 │   ├── projeto-pesquisa-cnpq.md
 │   ├── projeto-fapesp.md
 │   ├── revisao-sistematica-prisma-pt.md
-│   ├── revisao-integrativa-botelho.md
+│   ├── revisao-integrativa.md
+│   ├── metanalise.md
 │   ├── parecer-academico.md
-│   └── resposta-revisor.md
+│   ├── relatorio-pibic.md
+│   ├── resposta-revisor.md
+│   └── latex/
+│       ├── abntex2-tcc.tex
+│       ├── abntex2-dissertacao.tex
+│       ├── abntex2-tese.tex
+│       ├── sbc-artigo.tex
+│       └── anped-trabalho.tex
 │
-├── references/                  # Bases de conhecimento
-│   ├── abnt/
-│   │   ├── nbr-6023-referencias.md
-│   │   ├── nbr-10520-citacoes.md
-│   │   ├── nbr-14724-trabalhos.md
-│   │   ├── nbr-15287-projetos.md
-│   │   ├── nbr-6022-artigos.md
-│   │   └── nbr-6028-resumos.md
-│   ├── qualis/
-│   │   ├── estratos-areas-capes.md
-│   │   ├── como-consultar.md
-│   │   └── novo-qualis-2025.md
-│   ├── plataformas/
-│   │   ├── lattes-scielo-capes.md
-│   │   ├── bdtd-sucupira.md
-│   │   └── faps-estaduais.md
-│   ├── metodologia/
-│   │   ├── autores-classicos-br.md
-│   │   ├── tipos-pesquisa.md
-│   │   ├── prisma-pt.md
-│   │   └── analise-conteudo-bardin.md
-│   ├── revistas/
-│   │   ├── computacao.md
-│   │   ├── educacao.md
-│   │   ├── saude-coletiva.md
-│   │   ├── administracao.md
-│   │   ├── direito.md
-│   │   ├── engenharias.md
-│   │   ├── psicologia.md
-│   │   └── letras-linguistica.md
-│   └── portugues-academico/
-│       ├── impessoalidade-conectivos.md
-│       ├── erros-comuns.md
-│       └── tempo-verbal.md
-│
-└── examples/                    # Exemplos reais
-    ├── artigo-completo-exemplo.md
-    ├── tcc-completo-exemplo.md
-    └── projeto-aprovado-exemplo.md
+└── references/                  # Bases de conhecimento
+    ├── abnt/
+    │   ├── nbr-6022-artigos.md
+    │   ├── nbr-6023-referencias.md
+    │   ├── nbr-6024-numeracao.md
+    │   ├── nbr-6027-sumario.md
+    │   ├── nbr-6028-resumos.md
+    │   ├── nbr-6034-indices.md
+    │   ├── nbr-10520-citacoes.md
+    │   ├── nbr-12225-lombada.md
+    │   ├── nbr-14724-trabalhos.md
+    │   └── nbr-15287-projetos.md
+    ├── qualis/
+    │   ├── areas-capes.md
+    │   ├── estratos.md
+    │   └── como-consultar.md
+    ├── plataformas/
+    │   ├── lattes.md
+    │   ├── scielo.md
+    │   ├── periodicos-capes.md
+    │   ├── bdtd.md
+    │   ├── sucupira.md
+    │   └── cnpq-cv-grupos.md
+    ├── metodologia/
+    │   ├── autores-classicos-br.md
+    │   ├── tipos-pesquisa.md
+    │   ├── prisma-pt.md
+    │   ├── analise-conteudo-bardin.md
+    │   └── revisao-integrativa-botelho.md
+    ├── revistas/
+    │   ├── computacao.md
+    │   ├── educacao.md
+    │   ├── saude-coletiva.md
+    │   ├── administracao.md
+    │   ├── direito.md
+    │   ├── engenharias.md
+    │   ├── psicologia.md
+    │   ├── letras-linguistica.md
+    │   └── servico-social.md
+    └── portugues-academico/
+        ├── impessoalidade.md
+        ├── conectivos.md
+        ├── erros-comuns.md
+        └── tempo-verbal.md
 ```
+
+⚠️ Pasta `examples/` ainda não existe — está prevista para v0.3.0 (exemplos reais anonimizados).
 
 ---
 
@@ -304,18 +320,19 @@ Exemplo: `skills/projeto-fapesp-completo/`, `skills/redacao-cientifica-engenhari
 - [x] Skill `revisao-sistematica-br`
 - [x] Documentação básica
 
-### v0.2.0 (próximo)
-- [ ] Skill `revisor-pares-br` completa
-- [ ] Skill `tcc-abnt` completa
-- [ ] Templates LaTeX (`.tex`) com abnTeX2
-- [ ] Mais NBRs (15287, 6022, 6028, 6024, 6027)
-- [ ] References de revistas em todas as áreas
+### v0.2.0 (atual — abr/2026)
+- [x] Skill `revisor-pares-br` completa
+- [x] Skill `tcc-abnt` completa (com 5 templates de capítulo)
+- [x] Templates LaTeX (`.tex`) com abnTeX2 + ANPEd + SBC
+- [x] NBRs 6022, 6024, 6027, 6028, 6034, 12225, 14724, 15287
+- [x] References de revistas em 9 áreas CAPES
+- [x] Scripts: SciELO, BDTD via OAI-PMH, DOI/CrossRef, validação ABNT
 - [ ] Hooks (auto-revisão ABNT antes de finalizar)
 - [ ] CLI standalone (`pesquisador-br` no terminal)
 
-### v0.3.0
-- [ ] Integração com Lattes (busca de currículo via API ou scraping)
-- [ ] Integração com Sucupira (verificação automática de Qualis)
+### v0.3.0 (próximo)
+- [ ] Pasta `examples/` com casos reais anonimizados
+- [ ] Cobertura de revistas em mais áreas (Antropologia, Sociologia, História, etc)
 - [ ] Geração de figuras (Mermaid, TikZ, PGFPlots)
 - [ ] Metanálise: scripts R/Python pra forest plot
 - [ ] Suporte a mais idiomas (espanhol acadêmico hispanofalante)

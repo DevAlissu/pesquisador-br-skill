@@ -117,18 +117,32 @@ Se quiser usar a skill com Claude API direto (fora do Claude Code), aí sim prec
 
 ### Scripts Python
 
-Pra usar os scripts utilitários (`scripts/busca_scielo.py`, `scripts/doi_para_referencia.py`):
+Pra usar os scripts utilitários:
 
 ```bash
 # Verificar Python instalado
 python --version  # ou python3 --version
 
-# Rodar exemplo
-python scripts/busca_scielo.py "ensino híbrido" --max 10
+# SciELO via ArticleMeta API (por ISSN)
+python scripts/busca_scielo.py 0102-311X --max 10
+
+# DOI -> referência ABNT (CrossRef)
 python scripts/doi_para_referencia.py 10.1590/S1413-24782020000100008
+
+# Buscar teses via OAI-PMH (UFRGS Lume por padrão)
+python scripts/busca_bdtd.py "ensino híbrido"
+python scripts/busca_bdtd.py --endpoints              # listar repositórios
+python scripts/busca_bdtd.py --sets                   # listar coleções
+
+# Validar formato ABNT 6023 num arquivo de referências
+python scripts/valida_referencias.py referencias.txt
+python scripts/valida_referencias.py --teste          # auto-teste
+
+# Guia de consulta Qualis (Sucupira não tem API)
+python scripts/verifica_qualis.py
 ```
 
-Não há dependências externas (usa stdlib).
+Não há dependências externas — todos os scripts usam apenas `stdlib` e endpoints públicos.
 
 ---
 

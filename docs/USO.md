@@ -10,7 +10,7 @@ Guia prático com exemplos reais.
 Você: Vou fazer meu TCC sobre uso de IA generativa no ensino superior.
 Sou aluna de Pedagogia da UFAM. Não sei por onde começar.
 
-iRMÃO (skill pesquisador-br ativa): 
+pesquisador-br (skill pesquisador-br ativa): 
 Olá! Vou te ajudar.
 
 Pra calibrar bem, me responde:
@@ -23,7 +23,7 @@ Pra calibrar bem, me responde:
 Você: Sim, é Educação. TCC graduação. Tema bruto. Prazo: 6 meses.
 Tenho orientadora.
 
-iRMÃO: Beleza. Próximo passo: refinar o tema.
+pesquisador-br: Beleza. Próximo passo: refinar o tema.
 
 "Uso de IA generativa no ensino superior" é um tema amplo. Pra TCC,
 recomendo recortar:
@@ -57,7 +57,7 @@ References:
 
 Use modo format-convert.
 
-iRMÃO: 
+pesquisador-br: 
 Convertido pra ABNT 6023:2018 + 10520:2023:
 
 **No texto:**
@@ -88,7 +88,7 @@ Me passa esses dados que completo a referência.
 Você: Preciso fazer revisão sistemática sobre ensino híbrido em
 educação superior brasileira.
 
-iRMÃO (skill revisao-sistematica-br ativa):
+pesquisador-br (skill revisao-sistematica-br ativa):
 Show. Vou te conduzir pela RS.
 
 **Etapa 1: Definir pergunta PICO**
@@ -155,7 +155,7 @@ em educação. Conforme Bardin a análise de conteúdo tem 3 etapas.
 Esse método foi usado em vários trabalhos como o de Silva e Costa
 2020, que mostraram que..."
 
-iRMÃO (skill pesquisador-br modo revision):
+pesquisador-br (skill pesquisador-br modo revision):
 
 📋 **Revisão ABNT do parágrafo**
 
@@ -207,7 +207,7 @@ feita a análise dos dados qualitativos?"
 
 Como respondo formalmente?
 
-iRMÃO:
+pesquisador-br:
 
 📝 Carta de Resposta a Revisor (R&R)
 
@@ -270,7 +270,7 @@ Atenciosamente,
 Você: A revista que estou pensando submeter é "Cadernos de Saúde
 Pública". É Qualis A?
 
-iRMÃO:
+pesquisador-br:
 
 🔍 **Verificação Qualis CAPES**
 
@@ -314,7 +314,7 @@ arXiv/SciELO Preprints enquanto aguarda.
 ```
 Você: Como faço a disclosure de uso de IA no meu trabalho?
 
-iRMÃO (modo disclosure):
+pesquisador-br (modo disclosure):
 
 📜 **Declaração de Uso de IA Generativa**
 

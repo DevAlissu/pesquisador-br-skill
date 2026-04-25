@@ -90,11 +90,11 @@ Cada etapa tem **integrity gate**: pendências são bloqueantes.
 
 ### Revisão de literatura
 - `revisao-sistematica-prisma-pt.md` — RS com PRISMA traduzido
-- `revisao-integrativa-botelho.md` — Revisão integrativa modelo Botelho et al.
-- `metanalise.md` — Para áreas quantitativas
+- `revisao-integrativa.md` — Revisão integrativa modelo Botelho et al.
+- `metanalise.md` — Meta-análise quantitativa (PRISMA + Cochrane)
 
 ### Documentos institucionais
-- `relatorio-pesquisa.md` — Relatório de PIBIC/PIBITI
+- `relatorio-pibic.md` — Relatório de PIBIC/PIBITI
 - `parecer-academico.md` — Parecer ad hoc
 - `resposta-revisor.md` — Carta de resposta a peer review
 
@@ -103,23 +103,23 @@ Cada etapa tem **integrity gate**: pendências são bloqueantes.
 - `abntex2-dissertacao.tex` — Dissertação abnTeX2
 - `abntex2-tese.tex` — Tese abnTeX2
 - `sbc-artigo.tex` — Artigo padrão SBC (computação)
-- `anped-trabalho.tex` — Trabalho padrão ANPEd
+- `anped-trabalho.tex` — Trabalho padrão ANPEd (educação)
 
 ---
 
 ## 🛠 Bases de conhecimento (`references/`)
 
 ### Normas ABNT (cobertura completa)
-- NBR 6023:2018 — Referências
-- NBR 10520:2023 — Citações
-- NBR 14724:2011 — Trabalhos acadêmicos (estrutura, formatação)
-- NBR 15287:2011 — Projetos de pesquisa
 - NBR 6022:2018 — Artigos em periódicos
+- NBR 6023:2018 — Referências
 - NBR 6024:2012 — Numeração progressiva
 - NBR 6027:2012 — Sumário
 - NBR 6028:2021 — Resumo
-- NBR 12225 — Lombada
-- NBR 6034 — Índices
+- NBR 6034:2004 — Índice
+- NBR 10520:2023 — Citações
+- NBR 12225:2004 — Lombada
+- NBR 14724:2011 — Trabalhos acadêmicos (estrutura, formatação)
+- NBR 15287:2011 — Projetos de pesquisa
 
 ### Qualis CAPES
 - 49 áreas de avaliação
@@ -165,15 +165,14 @@ Curadoria de revistas nacionais Qualis A em pelo menos:
 
 ```
 scripts/
-├── busca_scielo.py         # API SciELO programática
-├── busca_lattes.py         # Scraper Lattes (currículo público)
-├── busca_periodicos_capes.py
-├── busca_bdtd.py
-├── verifica_qualis.py      # Consulta Sucupira por ISSN/título
-├── doi_para_referencia.py  # DOI → referência ABNT 6023
-├── valida_referencias.py   # Verifica formato ABNT em texto
-└── verifica_plagio.py      # Comparação local básica
+├── busca_scielo.py         # Consulta SciELO via ArticleMeta API (por ISSN)
+├── busca_bdtd.py           # Coleta de teses via OAI-PMH (UFRGS Lume + outros)
+├── doi_para_referencia.py  # DOI → referência ABNT 6023 (CrossRef)
+├── valida_referencias.py   # Validação heurística de formato ABNT 6023
+└── verifica_qualis.py      # Guia de consulta Qualis na Sucupira
 ```
+
+⚠️ Os scripts usam apenas stdlib do Python (zero dependências externas) e endpoints públicos. Não exigem chave de API nem autenticação.
 
 ---
 
