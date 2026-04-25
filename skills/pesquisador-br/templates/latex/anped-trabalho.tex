@@ -1,0 +1,189 @@
+% =====================================================================
+% Template ANPEd — Trabalho Completo / Pôster
+% Para submissões à Reunião Nacional da ANPEd e GTs
+%
+% NOTA: Cada GT da ANPEd pode ter ajustes específicos.
+%       Sempre confira as normas do GT em https://www.anped.org.br
+%
+% Compilação: pdflatex doc.tex (3x para sumário/referências)
+% =====================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+% --- Pacotes essenciais
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Margens (padrão ANPEd: 3-2-3-2 cm, Times/Arial 12, espaçamento 1,5)
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=2cm]{geometry}
+
+% --- Espaçamento 1,5
+\usepackage{setspace}
+\onehalfspacing
+
+% --- Citações ABNT (autor-data)
+\usepackage[alf,abnt-emphasize=bf,abnt-etal-list=0,abnt-etal-cite=3]{abntex2cite}
+
+% --- Hiperlinks
+\usepackage[colorlinks=true,citecolor=black,linkcolor=black,urlcolor=blue]{hyperref}
+
+% --- Tabelas e figuras
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup[table]{position=above}
+\captionsetup[figure]{position=below}
+
+% --- Recuo de parágrafo (1,25 cm)
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+% --- Comandos auxiliares
+\newcommand{\titulodotrabalho}{TÍTULO DO TRABALHO\\\large Subtítulo, se houver}
+\newcommand{\gtanped}{GT XX -- Nome do Grupo de Trabalho}
+\newcommand{\nomedoautor}{Nome Sobrenome -- Sigla IES}
+
+% =====================================================================
+\begin{document}
+
+% --- Cabeçalho da ANPEd (sem identificação na primeira versão; só após aprovação)
+\begin{center}
+{\large \textbf{\titulodotrabalho}}\\[0.5cm]
+\textbf{\gtanped}\\[0.3cm]
+\nomedoautor\\
+\href{mailto:email@uea.edu.br}{email@uea.edu.br}\\
+% --- Apoio financeiro, se houver:
+% Bolsa CAPES / CNPq nº XXXXX / Edital FAPEAM nº XX
+\end{center}
+
+\vspace{0.5cm}
+
+% =====================================================================
+% RESUMO + PALAVRAS-CHAVE (NBR 6028)
+% =====================================================================
+\noindent\textbf{Resumo:} A presente pesquisa investigou [tema] no
+contexto de [recorte], adotando [tipo de pesquisa] como abordagem
+metodológica. Foram coletados [dados] mediante [instrumento de coleta],
+com posterior análise por meio de [método de análise]. Os resultados
+indicaram que [achado 1], além de [achado 2]. Conclui-se que
+[contribuição original], o que sinaliza para [implicações]. As
+limitações deste estudo incluem [limitação principal], sugerindo-se,
+para pesquisas futuras, [agenda].
+
+\vspace{0.3cm}
+
+\noindent\textbf{Palavras-chave:} termo 1; termo 2; termo 3; termo 4;
+termo 5.
+
+\vspace{0.5cm}
+
+% =====================================================================
+% INTRODUÇÃO
+% =====================================================================
+\section*{Introdução}
+
+[Parágrafo 1 -- Contextualização do tema]
+
+[Parágrafo 2 -- Lacuna na literatura, com 3-5 referências brasileiras]
+
+[Parágrafo 3 -- Pergunta de pesquisa + objetivos: geral + 2-4 específicos]
+
+[Parágrafo 4 -- Justificativa em 3 dimensões: teórica, prática, social]
+
+[Parágrafo 5 -- Estrutura do trabalho: ``Após esta introdução, a seção
+2 apresenta...'']
+
+% =====================================================================
+% REFERENCIAL TEÓRICO
+% =====================================================================
+\section*{Referencial Teórico}
+
+\subsection*{[Conceito-chave 1]}
+
+[Definição clássica + autor canônico]. \cite[p.~XX]{autor1}
+
+[Evolução / debates contemporâneos]. \cite{autor2,autor3}
+
+[Aplicação ao tema da pesquisa].
+
+\subsection*{[Conceito-chave 2]}
+
+[Estrutura semelhante]
+
+% =====================================================================
+% METODOLOGIA
+% =====================================================================
+\section*{Metodologia}
+
+A pesquisa caracteriza-se, quanto à natureza, como
+[básica/aplicada]. Quanto à abordagem, classifica-se como
+[qualitativa/quantitativa/mista]. Em relação aos objetivos,
+trata-se de pesquisa [exploratória/descritiva/explicativa]. Os
+procedimentos adotados configuram [estudo de caso/levantamento/
+análise documental/etnografia/pesquisa-ação]
+\citep{gil2017,marconi2017}.
+
+% --- Sujeitos / corpus
+[Quem participou? Quantos? Critérios de seleção?]
+
+% --- Coleta
+[Que instrumento? Quando? Onde?]
+
+% --- Análise
+A análise foi realizada conforme proposta de \citeonline{bardin2011}, em
+três fases: pré-análise, exploração do material e tratamento dos
+resultados.
+
+% --- Aspectos éticos
+A pesquisa foi aprovada pelo Comitê de Ética em Pesquisa da [IES],
+parecer nº XXXXX, CAAE XXXXX.
+
+% =====================================================================
+% RESULTADOS E DISCUSSÃO
+% =====================================================================
+\section*{Resultados e Discussão}
+
+\subsection*{[Eixo 1, alinhado com objetivo específico 1]}
+
+Constatou-se que [achado], conforme demonstrado na Tabela~\ref{tab:perfil}.
+
+\begin{table}[htbp]
+\centering
+\caption{Perfil dos participantes (n=15)}
+\label{tab:perfil}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Variável} & \textbf{n} & \textbf{\%} \\
+\midrule
+Gênero -- Feminino & 9 & 60{,}0 \\
+Gênero -- Masculino & 6 & 40{,}0 \\
+\bottomrule
+\end{tabular}
+\\\smallskip
+\footnotesize Fonte: dados da pesquisa (2026).
+\end{table}
+
+[Interpretação do achado + diálogo com literatura]
+
+\subsection*{[Eixo 2]}
+
+[...]
+
+% =====================================================================
+% CONSIDERAÇÕES FINAIS
+% =====================================================================
+\section*{Considerações Finais}
+
+[Recapitulação da pergunta]. [Síntese dos achados]. [Contribuição
+em 2-3 dimensões]. [Limitações]. [Agenda futura].
+
+% =====================================================================
+% REFERÊNCIAS
+% =====================================================================
+\renewcommand{\refname}{Referências}
+\bibliography{referencias}
+
+\end{document}
