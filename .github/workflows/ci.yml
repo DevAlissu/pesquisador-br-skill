@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  validate-skills:
+    name: Valida estrutura das skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar SKILL.md em cada skill
+        run: |
+          for dir in skills/*/; do
+            if [ ! -f "$dir/SKILL.md" ]; then
+              echo "❌ Faltando SKILL.md em $dir"
+              exit 1
+            fi
+            echo "✅ $dir"
+          done
+
+      - name: Verificar frontmatter YAML
+        run: |
+          for skill in skills/*/SKILL.md; do
+            if ! head -n 1 "$skill" | grep -q '^---'; then
+              echo "❌ $skill: sem frontmatter YAML"
+              exit 1
+            fi
+            if ! grep -q '^name:' "$skill"; then
+              echo "❌ $skill: faltando campo 'name'"
+              exit 1
+            fi
+            if ! grep -q '^description:' "$skill"; then
+              echo "❌ $skill: faltando campo 'description'"
+              exit 1
+            fi
+            echo "✅ $skill"
+          done
+
+  validate-python:
+    name: Valida scripts Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verificar sintaxe
+        run: |
+          for script in scripts/*.py; do
+            python -m py_compile "$script" || exit 1
+            echo "✅ $script"
+          done
+
+  validate-templates:
+    name: Valida templates markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar templates existem e não estão vazios
+        run: |
+          for template in skills/pesquisador-br/templates/*.md; do
+            if [ ! -s "$template" ]; then
+              echo "❌ $template está vazio"
+              exit 1
+            fi
+            echo "✅ $template"
+          done
