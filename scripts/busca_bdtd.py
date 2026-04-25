@@ -45,12 +45,13 @@ Limitações:
 import argparse
 import ipaddress
 import re
+import socket
 import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from typing import Iterator, List, Optional
 from urllib.parse import urlencode, urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 
 DEFAULT_ENDPOINT = "https://lume.ufrgs.br/oai/request"
@@ -78,19 +79,48 @@ HOSTS_BLOQUEADOS = frozenset({
 })
 
 
-def validar_endpoint(url: str) -> str:
+def _ip_inseguro(ip: ipaddress._BaseAddress) -> bool:
+    """
+    Retorna True se o IP é loopback / link-local / privado / multicast / reservado.
+    Trata IPv4-mapped IPv6 (::ffff:127.0.0.1) extraindo o IPv4 embutido,
+    porque algumas versões do Python reportam .is_loopback=False nesses casos.
+    """
+    if isinstance(ip, ipaddress.IPv6Address):
+        if ip.ipv4_mapped is not None:
+            return _ip_inseguro(ip.ipv4_mapped)
+        if ip.sixtofour is not None:
+            return _ip_inseguro(ip.sixtofour)
+    return (
+        ip.is_loopback
+        or ip.is_link_local
+        or ip.is_private
+        or ip.is_multicast
+        or ip.is_reserved
+        or ip.is_unspecified
+    )
+
+
+def validar_endpoint(url: str, resolver_dns: bool = True) -> str:
     """
     Valida URL de endpoint OAI-PMH para evitar SSRF.
 
     Bloqueia:
       - esquemas que não sejam http/https (file://, ftp://, gopher://, etc)
+      - URL sem host
       - hosts loopback (localhost, 127.0.0.0/8, ::1)
       - link-local / metadata cloud (169.254.0.0/16)
       - redes privadas (10/8, 172.16/12, 192.168/16, fc00::/7)
-      - URL sem host
+      - IPv4-mapped IPv6 (::ffff:127.0.0.1) e variantes 6to4
+      - hostnames que resolvam para qualquer dos IPs acima (anti-DNS-rebinding)
+        — pode ser desligado com resolver_dns=False (uso em testes)
 
     Retorna a URL validada.
     Levanta ValueError em caso de bloqueio.
+
+    Nota anti-TOCTOU: o DNS pode mudar entre validar_endpoint e a request real,
+    permitindo DNS rebinding em janela curta. SafeRedirectHandler revalida em
+    cada redirect; pra eliminar TOCTOU completamente seria preciso conectar
+    via IP literal e enviar Host header. Fora do escopo deste script.
     """
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https"):
@@ -102,18 +132,59 @@ def validar_endpoint(url: str) -> str:
     if host in HOSTS_BLOQUEADOS:
         raise ValueError(f"host bloqueado: {host}")
 
-    # Bloqueia IPs literais que sejam loopback / link-local / privados
+    # 1. Se host é IP literal: valida diretamente.
     try:
         ip = ipaddress.ip_address(host)
-        if ip.is_loopback or ip.is_link_local or ip.is_private or ip.is_multicast or ip.is_reserved:
+    except ValueError:
+        ip = None
+
+    if ip is not None:
+        if _ip_inseguro(ip):
             raise ValueError(f"endereço IP local/privado bloqueado: {host}")
-    except ValueError as exc:
-        # Se a string não é um IP válido, ipaddress.ip_address levanta ValueError —
-        # nesse caso é hostname e seguimos sem bloquear (DNS é resolvido pelo socket).
-        if "bloqueado" in str(exc):
-            raise
+        return url
+
+    # 2. Hostname: opcionalmente resolve DNS pra detectar rebinding
+    #    (lvh.me, *.nip.io e similares apontam pra 127.0.0.1).
+    if not resolver_dns:
+        return url
+
+    try:
+        infos = socket.getaddrinfo(host, parsed.port or 80, type=socket.SOCK_STREAM)
+    except socket.gaierror:
+        # DNS falhou agora; deixa urlopen falhar depois com mensagem nativa.
+        return url
+
+    for family, _, _, _, sockaddr in infos:
+        ip_str = sockaddr[0]
+        # Remove zone-id de IPv6 link-local (fe80::1%eth0)
+        if "%" in ip_str:
+            ip_str = ip_str.split("%", 1)[0]
+        try:
+            ip = ipaddress.ip_address(ip_str)
+        except ValueError:
+            continue
+        if _ip_inseguro(ip):
+            raise ValueError(
+                f"hostname {host!r} resolve para IP local/privado {ip_str} "
+                f"(possível DNS rebinding)"
+            )
 
     return url
+
+
+class SafeRedirectHandler(HTTPRedirectHandler):
+    """
+    HTTPRedirectHandler que revalida o destino antes de seguir o redirect.
+    Bloqueia ataques onde o servidor responde 302 Location: file:///etc/passwd
+    ou 302 Location: http://127.0.0.1/.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        validar_endpoint(newurl)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = build_opener(SafeRedirectHandler())
 
 
 def _request(endpoint: str, params: dict) -> ET.Element:
@@ -121,7 +192,7 @@ def _request(endpoint: str, params: dict) -> ET.Element:
     validar_endpoint(endpoint)
     url = f"{endpoint}?{urlencode(params)}"
     req = Request(url, headers={"User-Agent": USER_AGENT})
-    with urlopen(req, timeout=TIMEOUT) as resp:
+    with _OPENER.open(req, timeout=TIMEOUT) as resp:
         body = resp.read()
     try:
         return ET.fromstring(body)
@@ -343,20 +414,21 @@ def auto_teste() -> int:
     """
     erros = 0
 
-    # validar_endpoint — casos OK
+    # validar_endpoint — casos OK (sem rede, com resolver_dns=False)
     for url in [
         "https://lume.ufrgs.br/oai/request",
         "http://exemplo.org/oai",
         "https://teses.usp.br/oai/request?ignored=1",
+        "http://8.8.8.8/",  # IP público válido
     ]:
         try:
-            validar_endpoint(url)
+            validar_endpoint(url, resolver_dns=False)
             print(f"  [OK]   validar_endpoint accept {url!r}")
         except Exception as exc:
             print(f"  [FAIL] validar_endpoint deveria aceitar {url!r}: {exc}")
             erros += 1
 
-    # validar_endpoint — casos REJEITAR
+    # validar_endpoint — casos REJEITAR (não dependem de DNS)
     for url in [
         "file:///etc/passwd",
         "ftp://evil.example.com/",
@@ -367,14 +439,38 @@ def auto_teste() -> int:
         "http://10.0.0.5/",
         "http://192.168.1.1/",
         "http://[::1]/",
-        "https://",  # sem host
+        "http://[::ffff:127.0.0.1]/",       # IPv4-mapped IPv6 → loopback
+        "http://[::ffff:169.254.169.254]/", # IPv4-mapped → metadata
+        "http://[2002:7f00:1::]/",          # 6to4 wrapping 127.0.0.0/8
+        "http://0.0.0.0/",                  # unspecified
+        "https://",                          # sem host
     ]:
         try:
-            validar_endpoint(url)
+            validar_endpoint(url, resolver_dns=False)
             print(f"  [FAIL] validar_endpoint deveria REJEITAR {url!r}")
             erros += 1
         except ValueError:
             print(f"  [OK]   validar_endpoint reject {url!r}")
+
+    # validar_endpoint — DNS rebinding (resolver_dns=True por padrão)
+    # lvh.me, *.nip.io e 127.0.0.1.nip.io resolvem para 127.0.0.1.
+    # Esses testes precisam de DNS — se a máquina estiver offline, ignorar.
+    rebinding_urls = [
+        "http://lvh.me/oai",
+        "http://127.0.0.1.nip.io/oai",
+    ]
+    for url in rebinding_urls:
+        try:
+            validar_endpoint(url, resolver_dns=True)
+            print(f"  [WARN] validar_endpoint aceitou {url!r} — DNS rebinding não foi pego (verifique conectividade)")
+        except ValueError as exc:
+            if "rebinding" in str(exc) or "local/privado" in str(exc):
+                print(f"  [OK]   validar_endpoint reject (rebinding) {url!r}")
+            else:
+                # Pode ter falhado por outro motivo; não conta como erro de teste
+                print(f"  [SKIP] {url!r}: {exc}")
+        except Exception as exc:
+            print(f"  [SKIP] {url!r} (provavelmente offline): {exc}")
 
     # _extrair_ano
     casos_ano = [
