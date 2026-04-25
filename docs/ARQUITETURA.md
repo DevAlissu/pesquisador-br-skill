@@ -82,17 +82,19 @@ skills/pesquisador-br/
 │
 ├── SKILL.md                     # Frontmatter + persona + protocolo
 │
-├── agents/                      # Agentes especializados
+├── agents/                      # Agentes especializados (12)
 │   ├── intake.md                # Triagem inicial
+│   ├── pesquisador-base.md      # Define expertise da área CAPES
 │   ├── revisor-literatura.md    # Busca em bases BR
+│   ├── arquiteto-estrutura.md   # Escolhe template + monta sumário
+│   ├── argumentador.md          # Tese, hipóteses, contribuição
+│   ├── escritor-rascunho.md     # Escrita seção por seção
 │   ├── revisor-abnt.md          # Conferência de NBR 6023/10520
-│   ├── citacao-verificador.md
-│   ├── escritor-rascunho.md
-│   ├── argumentador.md
-│   ├── revisor-pares.md
-│   ├── formatador-final.md
-│   ├── mentor-socratico.md
-│   └── tradutor-bilingue.md
+│   ├── citacao-verificador.md   # Auditoria citação ↔ referência
+│   ├── revisor-pares.md         # Simulação de revisor Qualis
+│   ├── formatador-final.md      # Aplica NBR 14724
+│   ├── mentor-socratico.md      # Modo professor (explica)
+│   └── tradutor-bilingue.md     # Resumo PT + Abstract EN
 │
 ├── templates/                   # Templates de documentos
 │   ├── artigo-imrad-pt-br.md
@@ -310,7 +312,7 @@ Exemplo: `skills/projeto-fapesp-completo/`, `skills/redacao-cientifica-engenhari
 
 ## Roadmap
 
-### v0.1.0 (atual)
+### v0.1.0 (entregue)
 - [x] Estrutura base do plugin
 - [x] Skill `pesquisador-br` core
 - [x] NBR 6023, 10520, 14724
