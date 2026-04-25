@@ -205,6 +205,14 @@ Manda PR ou abre issue.
 
 ---
 
+## 🛡️ Segurança
+
+Para reportar vulnerabilidades, veja [`SECURITY.md`](SECURITY.md). **Não abra issue pública** para problemas de segurança — use [GitHub Security Advisories](https://github.com/DevAlissu/pesquisador-br-skill/security/advisories/new) ou e-mail privado.
+
+## 📜 Histórico de versões
+
+Veja [`CHANGELOG.md`](CHANGELOG.md).
+
 ## 📄 Licença
 
 MIT — uso livre comercial e acadêmico, com atribuição. Veja [`LICENSE`](LICENSE).
