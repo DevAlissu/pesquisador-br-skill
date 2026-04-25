@@ -50,6 +50,13 @@ REGEX_TESE_DISSERT = re.compile(r"\b(Tese|Disserta[çc][ãa]o|TCC|Monografia)\b"
 REGEX_DOI = re.compile(r"\b(10\.\d{4,9}/\S+)\b")
 REGEX_TITULO_ITALICO_NEGRITO = re.compile(r"(\*\*[^*]+\*\*|\*[^*]+\*|_[^_]+_)")
 
+# Padrão "Cidade: Editora" — uma palavra capitalizada (ou várias),
+# seguida de ":", seguida de palavra capitalizada (a editora).
+# Ex: "São Paulo: Atlas", "Rio de Janeiro: ABNT", "Porto Alegre: Artmed".
+REGEX_CIDADE_EDITORA = re.compile(
+    r"[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÀ-ÿ]+(?:\s[A-ZÁÉÍÓÚÂÊÔÃÕÇ\wÀ-ÿ]+)*\s*:\s*[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÀ-ÿ]+"
+)
+
 # URLs comuns de bases acadêmicas (sinaliza fonte online)
 DOMINIOS_ONLINE = (
     "scielo", "doi.org", "lattes", "bdtd", "capes",
@@ -73,10 +80,13 @@ def parece_tese(texto: str) -> bool:
 
 
 def parece_livro(texto: str) -> bool:
-    """Heurística: tem edição, ou cidade-editora padrão (sem volume/número de revista)."""
+    """
+    Heurística: aparenta ser livro se tem indicação de edição (3. ed.) OU
+    padrão Cidade: Editora visível. Exclui artigos e teses primeiro.
+    """
     if parece_artigo(texto) or parece_tese(texto):
         return False
-    return bool(REGEX_EDICAO.search(texto)) or ":" in texto
+    return bool(REGEX_EDICAO.search(texto)) or bool(REGEX_CIDADE_EDITORA.search(texto))
 
 
 # ---------- Validações por referência ----------
@@ -121,9 +131,10 @@ def validar_referencia(ref: str, strict: bool = False) -> List[str]:
     if eh_tese and "--" not in ref_strip and "—" not in ref_strip:
         avisos.append("tese/dissertação sem separador '--' antes da instituição")
 
-    # 7. Livro: cidade + editora (heurística)
-    if eh_livro and ":" not in ref_strip:
-        avisos.append("aparenta ser livro, mas não tem ':' separando cidade e editora")
+    # 7. Livro: cidade + editora (heurística — só dispara se a edição foi indicada
+    #    mas o padrão "Cidade: Editora" não é detectável)
+    if eh_livro and not REGEX_CIDADE_EDITORA.search(ref_strip):
+        avisos.append("aparenta ser livro (tem edição), mas não foi detectado padrão 'Cidade: Editora'")
 
     # 8. et al. — deve estar em itálico ou marcado (heurística leve)
     et_al_match = REGEX_ET_AL.search(ref_strip)
@@ -176,6 +187,13 @@ def auto_teste() -> int:
             True,
         ),
 
+        # OK — livro com Cidade: Editora bem formatado
+        (
+            "GIL, A. C. **Como elaborar projetos de pesquisa**. 6. ed. "
+            "São Paulo: Atlas, 2017.",
+            True,
+        ),
+
         # FALHA — sem ano
         (
             "GIL, A. C. Como elaborar projetos de pesquisa. Atlas.",
@@ -185,6 +203,12 @@ def auto_teste() -> int:
         # FALHA — sobrenome em minúsculo
         (
             "gil, a. c. Como elaborar projetos de pesquisa. 6. ed. São Paulo: Atlas, 2017.",
+            False,
+        ),
+
+        # FALHA — livro (tem edição) mas SEM cidade: editora
+        (
+            "ALBUQUERQUE, J. *Estudos críticos*. 3. ed. Atlas 2020.",
             False,
         ),
     ]
