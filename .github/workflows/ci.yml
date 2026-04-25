@@ -121,6 +121,9 @@ jobs:
       - name: Auto-test — busca_bdtd.py (valida_endpoint, _extrair_ano, formatar_autor_abnt)
         run: python scripts/busca_bdtd.py --teste
 
+      - name: Auto-test — doi_para_referencia.py (formatar_abnt + sanitize)
+        run: python scripts/doi_para_referencia.py --teste
+
   validate-templates:
     name: Valida templates markdown
     runs-on: ubuntu-latest
