@@ -57,6 +57,46 @@ REGEX_CIDADE_EDITORA = re.compile(
     r"[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÀ-ÿ]+(?:\s[A-ZÁÉÍÓÚÂÊÔÃÕÇ\wÀ-ÿ]+)*\s*:\s*[A-ZÁÉÍÓÚÂÊÔÃÕÇ][\wÀ-ÿ]+"
 )
 
+# Prefixos comuns em referências que NÃO são "Cidade: Editora" mas geram
+# falso positivo no regex acima ("Disponível em: ABNT", "Acesso em: 24",
+# "DOI: 10.1590", "ISSN: 1234-5678", "ISBN: 978-...").
+PREFIXOS_FALSOS_LIVRO = (
+    "Disponível",
+    "Acesso",
+    "DOI",
+    "ISSN",
+    "ISBN",
+    "URL",
+    "Endereço",
+    "E-mail",
+    "Lattes",
+    "ORCID",
+    "In",  # "In: SOBRENOME, ..." (capítulo de livro) — prefixo de citação, não local
+)
+
+
+def tem_cidade_editora(texto: str) -> bool:
+    """
+    True se o texto tem o padrão Cidade: Editora E não é um falso positivo
+    (Disponível em: X, DOI: X, etc).
+    """
+    for match in REGEX_CIDADE_EDITORA.finditer(texto):
+        # Palavras imediatamente antes do match (até 2)
+        prefixo = texto[: match.start()].rstrip()
+        ultimas_2 = prefixo.rsplit(maxsplit=2)[-2:] if prefixo else []
+        ultimas_2 = [p.rstrip(".,;:") for p in ultimas_2]
+
+        # Palavras DENTRO do match, antes do ":"
+        antes_dois_pontos = match.group().split(":", 1)[0].strip().split()
+
+        # Junta todas as palavras candidatas a prefixo conhecido
+        candidatas = set(ultimas_2) | set(antes_dois_pontos)
+        if candidatas & set(PREFIXOS_FALSOS_LIVRO):
+            continue
+
+        return True
+    return False
+
 # URLs comuns de bases acadêmicas (sinaliza fonte online)
 DOMINIOS_ONLINE = (
     "scielo", "doi.org", "lattes", "bdtd", "capes",
@@ -82,11 +122,12 @@ def parece_tese(texto: str) -> bool:
 def parece_livro(texto: str) -> bool:
     """
     Heurística: aparenta ser livro se tem indicação de edição (3. ed.) OU
-    padrão Cidade: Editora visível. Exclui artigos e teses primeiro.
+    padrão Cidade: Editora visível (filtrando falsos positivos como
+    "Disponível em:", "DOI:", "ISSN:"). Exclui artigos e teses primeiro.
     """
     if parece_artigo(texto) or parece_tese(texto):
         return False
-    return bool(REGEX_EDICAO.search(texto)) or bool(REGEX_CIDADE_EDITORA.search(texto))
+    return bool(REGEX_EDICAO.search(texto)) or tem_cidade_editora(texto)
 
 
 # ---------- Validações por referência ----------
@@ -132,8 +173,8 @@ def validar_referencia(ref: str, strict: bool = False) -> List[str]:
         avisos.append("tese/dissertação sem separador '--' antes da instituição")
 
     # 7. Livro: cidade + editora (heurística — só dispara se a edição foi indicada
-    #    mas o padrão "Cidade: Editora" não é detectável)
-    if eh_livro and not REGEX_CIDADE_EDITORA.search(ref_strip):
+    #    mas o padrão "Cidade: Editora" não é detectável, ignorando falsos positivos)
+    if eh_livro and not tem_cidade_editora(ref_strip):
         avisos.append("aparenta ser livro (tem edição), mas não foi detectado padrão 'Cidade: Editora'")
 
     # 8. et al. — deve estar em itálico ou marcado (heurística leve)
@@ -213,7 +254,26 @@ def auto_teste() -> int:
         ),
     ]
 
+    # Testes unitários de tem_cidade_editora (falso positivo de prefixos)
+    casos_cidade_editora: List[Tuple[str, bool]] = [
+        ("São Paulo: Atlas, 2017", True),
+        ("Rio de Janeiro: ABNT, 2018", True),
+        ("Porto Alegre: Artmed, 2020", True),
+        ("Disponível em: ABNT", False),         # falso positivo histórico
+        ("Acesso em: 24 abr. 2026", False),     # mês não capitalizado, mas Acesso prefixo
+        ("DOI: 10.1590/exemplo", False),        # "10" não é capital
+        ("ISSN: 1234-5678", False),
+        ("In: SILVA, J. (org.). Livro. São Paulo: Atlas, 2020", True),  # In: ignorado, mas SP:Atlas casa
+    ]
     erros = 0
+    for entrada, esperado in casos_cidade_editora:
+        obtido = tem_cidade_editora(entrada)
+        if obtido == esperado:
+            print(f"  [OK]   tem_cidade_editora({entrada!r}) -> {obtido}")
+        else:
+            print(f"  [FAIL] tem_cidade_editora({entrada!r}) = {obtido}, esperava {esperado}")
+            erros += 1
+
     for i, (ref, deve_passar) in enumerate(casos, 1):
         avisos = validar_referencia(ref)
         passou = len(avisos) == 0
