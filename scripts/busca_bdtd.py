@@ -43,12 +43,13 @@ Limitações:
 """
 
 import argparse
+import ipaddress
 import re
 import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from typing import Iterator, List, Optional
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
 
@@ -64,9 +65,6 @@ ENDPOINTS_CONHECIDOS = {
 USER_AGENT = "pesquisador-br-skill/0.1 (https://github.com/DevAlissu/pesquisador-br-skill)"
 TIMEOUT = 30  # segundos
 
-# OAI_ENDPOINT é resolvido na CLI; mantido como variável de módulo para compatibilidade interna
-OAI_ENDPOINT = DEFAULT_ENDPOINT
-
 # Namespaces OAI-PMH e Dublin Core
 NS = {
     "oai": "http://www.openarchives.org/OAI/2.0/",
@@ -74,10 +72,54 @@ NS = {
     "oai_dc": "http://www.openarchives.org/OAI/2.0/oai_dc/",
 }
 
+# Hosts/redes que NUNCA devem ser usadas como endpoint OAI-PMH (SSRF protection)
+HOSTS_BLOQUEADOS = frozenset({
+    "localhost", "ip6-localhost", "ip6-loopback",
+})
 
-def _request(params: dict) -> ET.Element:
+
+def validar_endpoint(url: str) -> str:
+    """
+    Valida URL de endpoint OAI-PMH para evitar SSRF.
+
+    Bloqueia:
+      - esquemas que não sejam http/https (file://, ftp://, gopher://, etc)
+      - hosts loopback (localhost, 127.0.0.0/8, ::1)
+      - link-local / metadata cloud (169.254.0.0/16)
+      - redes privadas (10/8, 172.16/12, 192.168/16, fc00::/7)
+      - URL sem host
+
+    Retorna a URL validada.
+    Levanta ValueError em caso de bloqueio.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"esquema {parsed.scheme!r} não permitido (use http ou https)")
+    if not parsed.hostname:
+        raise ValueError(f"URL sem host: {url!r}")
+
+    host = parsed.hostname.lower()
+    if host in HOSTS_BLOQUEADOS:
+        raise ValueError(f"host bloqueado: {host}")
+
+    # Bloqueia IPs literais que sejam loopback / link-local / privados
+    try:
+        ip = ipaddress.ip_address(host)
+        if ip.is_loopback or ip.is_link_local or ip.is_private or ip.is_multicast or ip.is_reserved:
+            raise ValueError(f"endereço IP local/privado bloqueado: {host}")
+    except ValueError as exc:
+        # Se a string não é um IP válido, ipaddress.ip_address levanta ValueError —
+        # nesse caso é hostname e seguimos sem bloquear (DNS é resolvido pelo socket).
+        if "bloqueado" in str(exc):
+            raise
+
+    return url
+
+
+def _request(endpoint: str, params: dict) -> ET.Element:
     """Faz requisição GET ao endpoint OAI-PMH e devolve raiz XML."""
-    url = f"{OAI_ENDPOINT}?{urlencode(params)}"
+    validar_endpoint(endpoint)
+    url = f"{endpoint}?{urlencode(params)}"
     req = Request(url, headers={"User-Agent": USER_AGENT})
     with urlopen(req, timeout=TIMEOUT) as resp:
         body = resp.read()
@@ -87,12 +129,12 @@ def _request(params: dict) -> ET.Element:
         raise RuntimeError(f"resposta XML inválida: {exc}") from exc
 
 
-def listar_sets() -> List[dict]:
+def listar_sets(endpoint: str) -> List[dict]:
     """
-    Lista os 'sets' (instituições) disponíveis na BDTD.
+    Lista os 'sets' (instituições) disponíveis no endpoint OAI-PMH.
     Cada set tem 'spec' (identificador) e 'name' (descrição).
     """
-    root = _request({"verb": "ListSets"})
+    root = _request(endpoint, {"verb": "ListSets"})
     sets = []
     for s in root.findall(".//oai:set", NS):
         spec = s.findtext("oai:setSpec", default="", namespaces=NS)
@@ -102,6 +144,7 @@ def listar_sets() -> List[dict]:
 
 
 def buscar_registros(
+    endpoint: str,
     set_spec: Optional[str] = None,
     desde: Optional[str] = None,
     ate: Optional[str] = None,
@@ -112,6 +155,7 @@ def buscar_registros(
     Coleta registros via ListRecords. Yield de dicts com metadados Dublin Core.
 
     Parâmetros:
+        endpoint: URL OAI-PMH (validada por validar_endpoint)
         set_spec: filtro por instituição (ex: 'com_ufrgs')
         desde: data inicial YYYY-MM-DD (filtra "from")
         ate: data final YYYY-MM-DD (filtra "until")
@@ -128,7 +172,7 @@ def buscar_registros(
 
     lotes = 0
     while True:
-        root = _request(params)
+        root = _request(endpoint, params)
         for record in root.findall(".//oai:record", NS):
             header = record.find("oai:header", NS)
             if header is None:
@@ -289,12 +333,91 @@ def formatar_resumo(reg: dict, idx: int) -> str:
     return f"#{idx} [{ano}] {tipo}\n   {titulo}\n   por {autor}"
 
 
+# ---------- Auto-teste ----------
+
+
+def auto_teste() -> int:
+    """
+    Testes embutidos das funções puras (validar_endpoint, _extrair_ano,
+    formatar_autor_abnt). Não faz chamadas HTTP. Retorna 0 se todos passarem.
+    """
+    erros = 0
+
+    # validar_endpoint — casos OK
+    for url in [
+        "https://lume.ufrgs.br/oai/request",
+        "http://exemplo.org/oai",
+        "https://teses.usp.br/oai/request?ignored=1",
+    ]:
+        try:
+            validar_endpoint(url)
+            print(f"  [OK]   validar_endpoint accept {url!r}")
+        except Exception as exc:
+            print(f"  [FAIL] validar_endpoint deveria aceitar {url!r}: {exc}")
+            erros += 1
+
+    # validar_endpoint — casos REJEITAR
+    for url in [
+        "file:///etc/passwd",
+        "ftp://evil.example.com/",
+        "gopher://x/",
+        "http://localhost:8080/",
+        "http://127.0.0.1/",
+        "http://169.254.169.254/latest/meta-data/",  # AWS/GCP metadata
+        "http://10.0.0.5/",
+        "http://192.168.1.1/",
+        "http://[::1]/",
+        "https://",  # sem host
+    ]:
+        try:
+            validar_endpoint(url)
+            print(f"  [FAIL] validar_endpoint deveria REJEITAR {url!r}")
+            erros += 1
+        except ValueError:
+            print(f"  [OK]   validar_endpoint reject {url!r}")
+
+    # _extrair_ano
+    casos_ano = [
+        (["2020-04-15"], "2020"),
+        (["2024-01-01T00:00:00Z"], "2024"),
+        (["sem ano"], ""),
+        ([], ""),
+        (["1999-12-31", "2030-01-01"], "1999"),  # primeiro ganha
+    ]
+    for entrada, esperado in casos_ano:
+        obtido = _extrair_ano(entrada)
+        if obtido == esperado:
+            print(f"  [OK]   _extrair_ano({entrada!r}) -> {obtido!r}")
+        else:
+            print(f"  [FAIL] _extrair_ano({entrada!r}) = {obtido!r}, esperava {esperado!r}")
+            erros += 1
+
+    # formatar_autor_abnt
+    casos_autor = [
+        ("José Alberto Silva", "SILVA, José Alberto"),
+        ("Silva, José", "SILVA, José"),     # já formatado
+        ("Maria", "MARIA"),                 # nome único
+        ("M. C. S. Minayo", "MINAYO, M. C. S."),
+    ]
+    for entrada, esperado in casos_autor:
+        obtido = formatar_autor_abnt(entrada)
+        if obtido == esperado:
+            print(f"  [OK]   formatar_autor_abnt({entrada!r}) -> {obtido!r}")
+        else:
+            print(f"  [FAIL] formatar_autor_abnt({entrada!r}) = {obtido!r}, esperava {esperado!r}")
+            erros += 1
+
+    if erros:
+        print(f"\n❌ {erros} caso(s) falharam")
+        return 1
+    print("\n✅ Todos os testes passaram")
+    return 0
+
+
 # ---------- CLI ----------
 
 
 def main() -> int:
-    global OAI_ENDPOINT
-
     parser = argparse.ArgumentParser(
         description="Coleta de teses/dissertações via OAI-PMH (UFRGS Lume por padrão; também funciona com USP, UFMG, etc)."
     )
@@ -312,7 +435,11 @@ def main() -> int:
     parser.add_argument("--max", type=int, default=20, help="Máximo de resultados (padrão: 20)")
     parser.add_argument("--max-lotes", type=int, default=5, help="Limite de lotes OAI-PMH (padrão: 5 = ~500 registros)")
     parser.add_argument("--abnt", action="store_true", help="Imprime no formato ABNT 6023")
+    parser.add_argument("--teste", action="store_true", help="Roda auto-teste (sem rede) e sai")
     args = parser.parse_args()
+
+    if args.teste:
+        return auto_teste()
 
     if args.endpoints:
         print("=== Endpoints OAI-PMH conhecidos ===\n")
@@ -321,19 +448,22 @@ def main() -> int:
         print("\nUso: --endpoint <alias> ou --endpoint <url completa>")
         return 0
 
-    # Resolve alias para URL
-    if args.endpoint in ENDPOINTS_CONHECIDOS:
-        OAI_ENDPOINT = ENDPOINTS_CONHECIDOS[args.endpoint]
-    else:
-        OAI_ENDPOINT = args.endpoint
+    # Resolve alias para URL e valida (anti-SSRF)
+    endpoint = ENDPOINTS_CONHECIDOS.get(args.endpoint, args.endpoint)
+    try:
+        endpoint = validar_endpoint(endpoint)
+    except ValueError as exc:
+        print(f"❌ Endpoint rejeitado: {exc}", file=sys.stderr)
+        print("   Use --endpoints para ver opções confiáveis.", file=sys.stderr)
+        return 2
 
     if args.sets:
         try:
-            sets = listar_sets()
+            sets = listar_sets(endpoint)
         except Exception as exc:
-            print(f"❌ Erro ao consultar {OAI_ENDPOINT}: {exc}", file=sys.stderr)
+            print(f"❌ Erro ao consultar {endpoint}: {exc}", file=sys.stderr)
             return 1
-        print(f"=== {len(sets)} sets em {OAI_ENDPOINT} ===\n")
+        print(f"=== {len(sets)} sets em {endpoint} ===\n")
         for s in sets[:60]:
             print(f"  {s['spec']:35s} {s['name']}")
         if len(sets) > 60:
@@ -342,15 +472,16 @@ def main() -> int:
 
     if not args.termos and not args.set_spec:
         parser.print_help()
-        print("\nDica: use --sets para listar instituições, ou passe termos.", file=sys.stderr)
+        print("\nDica: use --sets para listar instituições, --endpoints para listar repositórios, ou passe termos.", file=sys.stderr)
         return 2
 
     desde = args.desde or (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-    print(f"Consultando {OAI_ENDPOINT} (set={args.set_spec or '*'}, from={desde}, until={args.ate or 'agora'})...", file=sys.stderr)
+    print(f"Consultando {endpoint} (set={args.set_spec or '*'}, from={desde}, until={args.ate or 'agora'})...", file=sys.stderr)
 
     encontrados: List[dict] = []
     try:
         for reg in buscar_registros(
+            endpoint,
             set_spec=args.set_spec,
             desde=desde,
             ate=args.ate,
@@ -361,7 +492,7 @@ def main() -> int:
                 if len(encontrados) >= args.max:
                     break
     except Exception as exc:
-        print(f"❌ Erro ao consultar {OAI_ENDPOINT}: {exc}", file=sys.stderr)
+        print(f"❌ Erro ao consultar {endpoint}: {exc}", file=sys.stderr)
         return 1
 
     if not encontrados:
