@@ -1,6 +1,39 @@
 # Autores-Referência da Metodologia Científica Brasileira
 
-> Pesquisador brasileiro **DEVE** conhecer (e citar) esses autores quando trabalha metodologia. São referência consolidada nos PPGs CAPES.
+> ⚠️ **LEIA ANTES**: este documento NÃO é uma lista fechada de autores que você deve seguir. É uma referência de autores **canônicos da METODOLOGIA científica brasileira** — usados especificamente para fundamentar **como** você faz a pesquisa (na seção de metodologia), não **o que** você pesquisa.
+
+## Quando usar esta lista
+
+✅ **Use** quando precisar fundamentar:
+- Tipo de pesquisa (Gil)
+- Procedimentos de análise qualitativa (Bardin, Minayo)
+- Estudo de caso (Yin)
+- Pesquisa-ação (Thiollent)
+- Conceitos básicos de método científico (Marconi e Lakatos)
+
+❌ **Não use como restrição** quando:
+- Fazendo revisão de literatura sobre o tema da pesquisa (cite quem aparecer na busca)
+- Fundamentando referencial teórico do tema (cite os autores do tema, brasileiros ou estrangeiros)
+- Discutindo resultados (cite quem dialogar com seus achados)
+
+## Princípio fundamental
+
+Em **revisão sistemática** ou **revisão de literatura**, os autores citados vêm **da busca em bases** (SciELO, Periódicos CAPES, BDTD, Scopus, Web of Science), **NÃO** desta lista. Foucault, Bourdieu, Latour, Crenshaw, Said, Mignolo, hooks, Butler, qualquer autor relevante — entram conforme aparecem na busca.
+
+Esta lista serve apenas como **baseline metodológica** — é o conjunto mínimo de autores que pesquisador brasileiro **costuma encontrar** ao fundamentar metodologia, porque são parte do cânone de PPGs no Brasil.
+
+## Princípio adicional: pluralidade epistemológica
+
+Pesquisa séria não se limita a tradição única. Considere também:
+
+- **Epistemologias do Sul** (Boaventura de Sousa Santos)
+- **Decolonialidade** (Mignolo, Quijano, Lugones)
+- **Feminismos** (hooks, Crenshaw, Federici, Lélia González)
+- **Pensamento negro brasileiro** (Lélia González, Sueli Carneiro, Djamila Ribeiro)
+- **Estudos indígenas** (Davi Kopenawa, Ailton Krenak, Daniel Munduruku)
+- **Ciência e tecnologia críticas** (Latour, Stengers, Haraway)
+
+Esses autores são **igualmente válidos** e podem ser canônicos em áreas específicas (Sociologia, Antropologia, Estudos de Gênero, Educação Crítica). Não os ignore por não estarem nesta lista — esta lista cobre **metodologia científica generalista**, não filosofia da ciência ou crítica epistemológica.
 
 ---
 
@@ -234,3 +267,14 @@ Quando o usuário escreve metodologia, a skill:
 ❌ Ignorar Bardin em pesquisa qualitativa com análise de conteúdo — é virtualmente obrigatório.
 ❌ Citar Yin em pesquisa que **não é** estudo de caso — leitor crítico vai pegar.
 ❌ Inventar página/edição.
+❌ **Citar APENAS autores desta lista** ignorando o resultado da busca sistemática — esse é o erro inverso. Esta lista cobre metodologia; o **conteúdo** vem da revisão de literatura específica do tema.
+❌ **Limitar revisão de literatura** ao cânone tradicional brasileiro — pesquisa séria contempla pluralidade epistemológica (decolonial, feminista, racializada, indígena, etc).
+❌ **Forçar autores desta lista** em revisão sistemática — RS exige rigor de busca, não conformidade com lista pré-definida.
+
+## Como interagir com revisão sistemática
+
+Ao conduzir RS, esta lista serve apenas como **fonte secundária** para:
+1. Fundamentar a **metodologia da própria revisão** (PRISMA-PT, modelo Botelho et al., etc)
+2. Definir **procedimentos de análise** dos estudos primários (Bardin para análise de conteúdo dos estudos, por exemplo)
+
+Os autores **citados na revisão** vêm dos artigos selecionados pela busca, não desta lista.

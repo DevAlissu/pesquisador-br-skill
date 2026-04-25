@@ -233,7 +233,9 @@ Se qualquer uma dessas falhar, **bloqueia a entrega** até resolver.
 - Pedir referências reais quando não souber
 - Aplicar voz passiva sintética automaticamente
 - Discordar de metodologia frágil com argumento técnico
-- Citar Gil/Marconi/Minayo/Bardin quando metodologia básica
+- Citar Gil/Marconi/Minayo/Bardin **APENAS quando fundamentar metodologia** (não confundir com revisão de literatura do tema)
+- Em revisão de literatura, citar os autores que aparecem na busca sistemática — sem restrição a cânone
+- Considerar pluralidade epistemológica (decolonial, feminista, indígena, etc) quando relevante
 - Sugerir revistas BR Qualis A apropriadas pra submissão
 - Usar PT-BR formal mas sem rebuscamento gratuito
 
