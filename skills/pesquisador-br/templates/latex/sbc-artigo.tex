@@ -1,0 +1,122 @@
+% Template Artigo SBC (Sociedade Brasileira de Computação)
+% Padrão para SBES, SBSI, SBBD, SBRC, SIBGRAPI, JBCS, etc.
+% Compilação: pdflatex + bibtex + pdflatex + pdflatex
+% Documentação: https://www.sbc.org.br/documentos-da-sbc/category/169-templates-para-publicacoes
+
+\documentclass[12pt]{article}
+\usepackage{sbc-template}            % classe oficial SBC (baixe em www.sbc.org.br)
+\usepackage{graphicx,url}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\sloppy
+
+\title{Título do Artigo: Subtítulo se Houver}
+
+\author{Autor Um\inst{1}, Autor Dois\inst{2}, Autor Três\inst{1}}
+
+\address{
+    Universidade Federal do Amazonas (UFAM)\\
+    Av. General Rodrigo Otávio Jordão Ramos, 6200 -- 69077-000 -- Manaus -- AM
+    \nextinstitute
+    Outra Instituição -- Cidade -- UF
+    \email{\{autor1,autor3\}@ufam.edu.br, autor2@outra.br}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper presents [objective]. The methodology adopted was [...].
+Results indicate that [main finding]. The contribution to the field
+includes [...]. We conclude that [...].
+\end{abstract}
+
+\begin{resumo}
+Este artigo apresenta [objetivo]. A metodologia adotada foi [...].
+Os resultados indicam que [achado principal]. A contribuição para
+o campo inclui [...]. Conclui-se que [...].
+\end{resumo}
+
+\section{Introdução}
+
+[Contextualização. Citar trabalhos: \cite{gil2017}.]
+
+\subsection{Problema de Pesquisa}
+[Pergunta de pesquisa.]
+
+\subsection{Objetivos}
+\textbf{Geral}: [...]
+
+\textbf{Específicos}:
+\begin{itemize}
+    \item [obj1];
+    \item [obj2];
+    \item [obj3].
+\end{itemize}
+
+\subsection{Estrutura do Artigo}
+[O artigo está organizado em N seções...]
+
+\section{Trabalhos Relacionados}
+
+[Revisão de literatura organizada por temas. Citar trabalhos
+da SBC: \cite{exemplo2022}, JBCS: \cite{outro2021}, e
+internacionais: \cite{international2020}.]
+
+\section{Metodologia}
+
+\subsection{Tipo de Pesquisa}
+A pesquisa caracteriza-se como [...] de natureza [...] com
+abordagem [qualitativa/quantitativa/mista], conforme \cite{gil2017}.
+
+\subsection{Procedimentos de Coleta}
+[Descrição.]
+
+\subsection{Procedimentos de Análise}
+[Descrição.]
+
+\section{Resultados}
+
+\subsection{Achado 1}
+[Apresentação.]
+
+\subsection{Achado 2}
+[Apresentação.]
+
+% Exemplo de figura
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.7\textwidth]{caminho/para/figura.png}
+\caption{Descrição da figura}
+\label{fig:exemplo}
+\end{figure}
+
+% Exemplo de tabela
+\begin{table}[ht]
+\centering
+\caption{Descrição da tabela}
+\label{tab:exemplo}
+\begin{tabular}{|l|c|r|}
+\hline
+\textbf{Coluna 1} & \textbf{Coluna 2} & \textbf{Coluna 3} \\
+\hline
+Linha 1 & Dado & Dado \\
+Linha 2 & Dado & Dado \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Discussão}
+
+[Diálogo dos resultados com a literatura. Implicações.]
+
+\section{Considerações Finais}
+
+[Síntese. Contribuições. Limitações. Agenda.]
+
+\bibliographystyle{sbc}
+\bibliography{referencias}
+
+\end{document}

@@ -1,0 +1,198 @@
+% Template Tese de Doutorado abnTeX2 — pesquisador-br-skill
+% Suporta modalidade tradicional E "tese por artigos"
+% Compilação: pdflatex + bibtex + pdflatex + pdflatex
+
+\documentclass[
+    12pt,
+    openright,
+    twoside,
+    a4paper,
+    chapter=TITLE,
+    sumario=tradicional,
+    section=TITLE,
+    english,
+    brazil
+]{abntex2}
+
+\usepackage{cmap}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{pdfpages}               % pra incluir PDFs (artigos)
+
+\titulo{TÍTULO DA TESE: subtítulo}
+\autor{Nome Completo Sobrenome}
+\local{Manaus -- AM}
+\data{2026}
+\orientador{Prof.\textsuperscript{a} Dr.\textsuperscript{a} Nome do Orientador}
+% \coorientador{Prof. Dr. Nome do Coorientador}
+\instituicao{Universidade Federal do Amazonas \par
+            Programa de Pós-Graduação em [Nome] \par
+            Doutorado em [Área]}
+\tipotrabalho{Tese (Doutorado)}
+\preambulo{Tese apresentada ao Programa de Pós-Graduação em
+[Nome] da Universidade Federal do Amazonas, como requisito
+parcial para a obtenção do título de Doutor em [Área].
+\par
+Linha de pesquisa: [Linha].}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={\@title},
+    pdfauthor={\@author},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+}
+
+\begin{document}
+\selectlanguage{brazil}
+\frenchspacing
+
+\pretextual
+\imprimircapa
+\imprimirfolhaderosto
+
+% Folha de aprovação (5 examinadores: orientador + 2 internos + 2 externos)
+\begin{folhadeaprovacao}
+\begin{center}
+{\ABNTEXchapterfont\large\imprimirautor}
+\vspace*{\fill}
+\begin{center}
+\ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+\end{center}
+\vspace*{\fill}
+
+\hspace{.45\textwidth}\begin{minipage}{.5\textwidth}
+\imprimirpreambulo
+\end{minipage}\vspace*{\fill}
+\end{center}
+
+Tese aprovada. Manaus -- AM, \today:
+
+\assinatura{\textbf{\imprimirorientadorRotulo} \\ \imprimirorientador}
+\assinatura{\textbf{Prof. Dr. Nome 1 -- Examinador Interno} \\ Universidade Federal do Amazonas}
+\assinatura{\textbf{Prof. Dr. Nome 2 -- Examinador Interno} \\ Universidade Federal do Amazonas}
+\assinatura{\textbf{Prof. Dr. Nome 3 -- Examinador Externo} \\ [Outra Instituição]}
+\assinatura{\textbf{Prof. Dr. Nome 4 -- Examinador Externo} \\ [Outra Instituição]}
+\end{folhadeaprovacao}
+
+\begin{dedicatoria}\vspace*{\fill}\centering\textit{Dedicatória.}\vspace*{\fill}\end{dedicatoria}
+
+\begin{agradecimentos}
+O presente trabalho foi realizado com apoio da [CAPES/CNPq/FAPESP]
+-- processo nº [...].
+
+Agradecimentos à orientação, à banca, ao programa, aos pares.
+\end{agradecimentos}
+
+\begin{epigrafe}\vspace*{\fill}\begin{flushright}
+\textit{``Citação inspiradora.''} \\ (AUTOR, ANO, p. X)
+\end{flushright}\end{epigrafe}
+
+\setlength{\absparsep}{18pt}
+\begin{resumo}
+\noindent A presente tese investigou [problema] sob [N]
+perspectivas articuladas, adotando [abordagem]. Os objetivos
+foram: (i) [obj1]; (ii) [obj2]; (iii) [obj3]. A pesquisa foi
+conduzida em [período], com [N] estudos articulados. Os achados
+indicaram [resultado principal], contribuindo para [campo] ao
+[contribuição]. As limitações incluem [limitação], indicando-se
+[agenda].
+
+\noindent\textbf{Palavras-chave}: termo 1; termo 2; termo 3;
+termo 4; termo 5; termo 6.
+\end{resumo}
+
+\begin{resumo}[Abstract]\begin{otherlanguage*}{english}
+\noindent This thesis investigated [problem] under [N] articulated
+perspectives, adopting [approach]. The objectives were: (i) [obj1];
+(ii) [obj2]; (iii) [obj3]. Research was conducted between [period],
+with [N] articulated studies. Findings indicated [main result],
+contributing to [field] through [contribution]. Limitations include
+[limitation], with [agenda] suggested.
+
+\noindent\textbf{Keywords}: term 1; term 2; term 3; term 4; term 5;
+term 6.
+\end{otherlanguage*}\end{resumo}
+
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*\cleardoublepage
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*\cleardoublepage
+
+\begin{siglas}
+\item[ABNT] Associação Brasileira de Normas Técnicas
+\item[CAPES] Coordenação de Aperfeiçoamento de Pessoal de Nível Superior
+\item[CEP] Comitê de Ética em Pesquisa
+\item[CNPq] Conselho Nacional de Desenvolvimento Científico e Tecnológico
+\item[FAP] Fundação de Amparo à Pesquisa
+\item[ORCID] Open Researcher and Contributor ID
+\item[PPG] Programa de Pós-Graduação
+\item[TCLE] Termo de Consentimento Livre e Esclarecido
+\end{siglas}
+
+\pdfbookmark[0]{\contentsname}{toc}\tableofcontents*\cleardoublepage
+
+\textual
+
+% ═══════════════════════════════════════════════════
+% MODALIDADE TRADICIONAL — comentar a partir daqui
+% e descomentar a modalidade "por artigos" abaixo
+% ═══════════════════════════════════════════════════
+
+\chapter{INTRODUÇÃO GERAL}
+\chapter{REFERENCIAL TEÓRICO}
+\chapter{METODOLOGIA}
+\chapter{ESTUDO 1: [Título]}
+\chapter{ESTUDO 2: [Título]}
+\chapter{ESTUDO 3: [Título]}
+\chapter{DISCUSSÃO GERAL}
+\chapter{CONSIDERAÇÕES FINAIS}
+
+% ═══════════════════════════════════════════════════
+% MODALIDADE TESE POR ARTIGOS — descomentar se for usar
+% ═══════════════════════════════════════════════════
+%
+% \chapter{INTRODUÇÃO GERAL}
+% \chapter{REFERENCIAL TEÓRICO COMUM}
+% \chapter{METODOLOGIA GERAL}
+%
+% \chapter{ARTIGO 1: [Título]}
+% \section{Status}
+% [Publicado em [Revista, Ano] / Aceito / Submetido]
+% % Para incluir PDF do artigo publicado:
+% % \includepdf[pages=-]{artigos/artigo1.pdf}
+%
+% \chapter{ARTIGO 2: [Título]}
+% \chapter{ARTIGO 3: [Título]}
+%
+% \chapter{DISCUSSÃO GERAL E CONSIDERAÇÕES FINAIS}
+
+\postextual
+
+\bibliography{referencias}
+
+\begin{apendicesenv}
+\partapendices
+\chapter{INSTRUMENTOS DE COLETA}
+\chapter{TCLE}
+\end{apendicesenv}
+
+\begin{anexosenv}
+\partanexos
+\chapter{PARECER DO CEP}
+\chapter{COMPROVANTES DE PUBLICAÇÃO DOS ARTIGOS}
+\end{anexosenv}
+
+\end{document}

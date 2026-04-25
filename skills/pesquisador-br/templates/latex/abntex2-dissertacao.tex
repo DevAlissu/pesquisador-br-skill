@@ -1,0 +1,223 @@
+% Template Dissertação de Mestrado abnTeX2 — pesquisador-br-skill
+% Compilação: pdflatex + bibtex + pdflatex + pdflatex
+% Diferenças vs TCC: estrutura mais robusta, inclui errata, mais
+% capítulos, preâmbulo de mestrado, banca de 3 examinadores.
+
+\documentclass[
+    12pt,
+    openright,
+    twoside,
+    a4paper,
+    chapter=TITLE,
+    sumario=tradicional,
+    section=TITLE,
+    english,
+    brazil
+]{abntex2}
+
+\usepackage{cmap}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{lipsum}                 % gerador de texto fake
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}
+\usepackage{amsmath, amssymb}       % matemática
+\usepackage{booktabs}               % tabelas profissionais
+
+\titulo{TÍTULO DA DISSERTAÇÃO: subtítulo se houver}
+\autor{Nome Completo Sobrenome}
+\local{Manaus -- AM}
+\data{2026}
+\orientador{Prof.\textsuperscript{a} Dr.\textsuperscript{a} Nome do Orientador}
+% \coorientador{Prof. Dr. Nome do Coorientador}
+\instituicao{Universidade Federal do Amazonas \par
+            Programa de Pós-Graduação em [Nome do Programa] \par
+            Mestrado em [Área]}
+\tipotrabalho{Dissertação (Mestrado)}
+\preambulo{Dissertação apresentada ao Programa de Pós-Graduação
+em [Nome do Programa] da Universidade Federal do Amazonas, como
+requisito parcial para a obtenção do título de Mestre em [Área].
+\par
+Linha de pesquisa: [Linha].}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={\@title},
+    pdfauthor={\@author},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+}
+
+\begin{document}
+\selectlanguage{brazil}
+\frenchspacing
+
+% PRÉ-TEXTUAIS
+\pretextual
+\imprimircapa
+\imprimirfolhaderosto
+
+% Folha de aprovação (3 examinadores: orientador + 2)
+\begin{folhadeaprovacao}
+\begin{center}
+{\ABNTEXchapterfont\large\imprimirautor}
+\vspace*{\fill}
+\begin{center}
+\ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+\end{center}
+\vspace*{\fill}
+
+\hspace{.45\textwidth}\begin{minipage}{.5\textwidth}
+\imprimirpreambulo
+\end{minipage}\vspace*{\fill}
+\end{center}
+
+Dissertação aprovada. Manaus -- AM, \today:
+
+\assinatura{\textbf{\imprimirorientadorRotulo} \\ \imprimirorientador}
+\assinatura{\textbf{Prof. Dr. Nome 1 -- Examinador Interno} \\ \\ Universidade Federal do Amazonas}
+\assinatura{\textbf{Prof. Dr. Nome 2 -- Examinador Externo} \\ \\ [Outra Instituição]}
+\end{folhadeaprovacao}
+
+% Dedicatória
+\begin{dedicatoria}
+\vspace*{\fill}\centering
+\textit{Dedicatória.}
+\vspace*{\fill}
+\end{dedicatoria}
+
+% Agradecimentos (mestrado: agência financiadora obrigatória)
+\begin{agradecimentos}
+O presente trabalho foi realizado com apoio da Coordenação de
+Aperfeiçoamento de Pessoal de Nível Superior -- Brasil (CAPES) --
+Código de Financiamento 001 / processo nº [...].
+
+Agradeço à orientadora, à banca, à família e aos colegas de
+programa.
+\end{agradecimentos}
+
+% Epígrafe
+\begin{epigrafe}
+\vspace*{\fill}
+\begin{flushright}
+\textit{``Citação inspiradora.''} \\
+(AUTOR, ANO, p. X)
+\end{flushright}
+\end{epigrafe}
+
+% Resumo
+\setlength{\absparsep}{18pt}
+\begin{resumo}
+\noindent A presente dissertação investigou [problema] no contexto
+de [recorte], adotando abordagem [qualitativa/quantitativa/mista].
+Como objetivos: (i) [obj1]; (ii) [obj2]; (iii) [obj3]. Foram
+coletados [dados] mediante [instrumento], analisados conforme
+[método]. Os achados indicaram [resultado principal], evidenciando
+[contribuição]. As limitações incluem [limitação], indicando-se
+[agenda futura].
+
+\noindent\textbf{Palavras-chave}: termo 1; termo 2; termo 3;
+termo 4; termo 5.
+\end{resumo}
+
+% Abstract
+\begin{resumo}[Abstract]
+\begin{otherlanguage*}{english}
+\noindent This dissertation investigated [problem] in the context
+of [scope], adopting a [qualitative/quantitative/mixed] approach.
+The objectives were: (i) [obj1]; (ii) [obj2]; (iii) [obj3]. [Data]
+was collected through [instrument] and analyzed using [method].
+Findings indicated [main result], evidencing [contribution].
+Limitations include [limitation], with [future agenda] suggested.
+
+\noindent\textbf{Keywords}: term 1; term 2; term 3; term 4; term 5.
+\end{otherlanguage*}
+\end{resumo}
+
+% Listas e sumário
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+% Lista de abreviaturas
+\begin{siglas}
+\item[CAPES] Coordenação de Aperfeiçoamento de Pessoal de Nível Superior
+\item[CNPq] Conselho Nacional de Desenvolvimento Científico e Tecnológico
+\item[CEP] Comitê de Ética em Pesquisa
+\item[TCLE] Termo de Consentimento Livre e Esclarecido
+\end{siglas}
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% TEXTUAIS
+\textual
+
+\chapter{INTRODUÇÃO}
+\section{Contextualização}
+\section{Problema de pesquisa}
+\section{Objetivos}
+\subsection{Geral}
+\subsection{Específicos}
+\section{Justificativa}
+\section{Estrutura da dissertação}
+
+\chapter{REFERENCIAL TEÓRICO}
+\section{[Conceito 1]}
+\section{[Conceito 2]}
+\section{[Conceito 3]}
+\section{Estado da arte}
+
+\chapter{METODOLOGIA}
+\section{Tipo e abordagem}
+\section{Cenário/contexto}
+\section{Sujeitos/participantes}
+\section{Procedimentos de coleta}
+\section{Procedimentos de análise}
+\section{Aspectos éticos}
+
+\chapter{RESULTADOS}
+\section{[Eixo 1]}
+\section{[Eixo 2]}
+\section{[Eixo 3]}
+
+\chapter{DISCUSSÃO}
+\section{Implicações teóricas}
+\section{Implicações práticas}
+\section{Limitações}
+
+\chapter{CONSIDERAÇÕES FINAIS}
+\section{Síntese}
+\section{Contribuições}
+\section{Agenda futura}
+
+% PÓS-TEXTUAIS
+\postextual
+
+\bibliography{referencias}
+
+\begin{apendicesenv}
+\partapendices
+\chapter{ROTEIRO DE ENTREVISTA}
+\chapter{TCLE -- TERMO DE CONSENTIMENTO}
+\end{apendicesenv}
+
+\begin{anexosenv}
+\partanexos
+\chapter{PARECER DO CEP}
+\end{anexosenv}
+
+\end{document}

@@ -1,0 +1,259 @@
+% Template TCC abnTeX2 — pesquisador-br-skill
+% Compatível com classe abntex2 (recomendada para TCC/dissertação/tese ABNT)
+% Compilação: pdflatex + bibtex + pdflatex + pdflatex
+% Documentação: https://www.abntex.net.br
+
+\documentclass[
+    12pt,                       % corpo 12pt
+    openright,                  % capítulos abrem em página direita
+    twoside,                    % impressão frente e verso
+    a4paper,                    % papel A4
+    chapter=TITLE,              % capítulos em maiúsculas
+    sumario=tradicional,        % sumário NBR 6027
+    section=TITLE,
+    english,                    % inglês para abstract
+    spanish,                    % espanhol opcional
+    brazil                      % última = idioma principal
+]{abntex2}
+
+% ─── Pacotes ────────────────────────────────────────
+\usepackage{cmap}                           % suporte a copy-paste
+\usepackage[utf8]{inputenc}                 % UTF-8
+\usepackage[T1]{fontenc}                    % fontes europeias
+\usepackage{lastpage}                       % páginas totais
+\usepackage{indentfirst}                    % indenta primeiro parágrafo
+\usepackage{color}                          % cores
+\usepackage{graphicx}                       % imagens
+\usepackage{microtype}                      % melhorias tipográficas
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}               % citações ABNT autor-data
+
+% ─── Configurações ──────────────────────────────────
+\titulo{TÍTULO DO TRABALHO: subtítulo se houver}
+\autor{Nome Completo Sobrenome}
+\local{Manaus -- AM}
+\data{2026}
+\orientador{Prof.\textsuperscript{a} Dr.\textsuperscript{a} Nome do Orientador}
+% \coorientador{Prof. Dr. Nome do Coorientador}
+\instituicao{Universidade Federal do Amazonas \par
+            Instituto de [...] \par
+            Curso de [...]}
+\tipotrabalho{Trabalho de Conclusão de Curso}
+\preambulo{Trabalho de Conclusão de Curso apresentado ao Curso de
+[...] da Universidade Federal do Amazonas, como requisito parcial
+para a obtenção do título de Bacharel/Licenciado em [...].}
+
+% ─── Hyperref ───────────────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={\@title},
+    pdfauthor={\@author},
+    pdfsubject={\imprimirpreambulo},
+    pdfkeywords={tcc}{abntex2}{universidade},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+
+% ═══════════════════════════════════════════════════
+\begin{document}
+\selectlanguage{brazil}
+\frenchspacing
+
+% ─── PRÉ-TEXTUAIS ──────────────────────────────────
+\pretextual
+
+\imprimircapa
+\imprimirfolhaderosto
+
+% Errata (opcional)
+% \begin{errata}
+% Errata aqui
+% \end{errata}
+
+% Folha de aprovação (manual)
+\begin{folhadeaprovacao}
+\begin{center}
+{\ABNTEXchapterfont\large\imprimirautor}
+
+\vspace*{\fill}\vspace*{\fill}
+\begin{center}
+\ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+\end{center}
+\vspace*{\fill}
+
+\hspace{.45\textwidth}\begin{minipage}{.5\textwidth}
+\imprimirpreambulo
+\end{minipage}\vspace*{\fill}
+\end{center}
+
+Trabalho aprovado. Manaus -- AM, \today:
+
+\assinatura{\textbf{\imprimirorientadorRotulo} \\ \imprimirorientador}
+\assinatura{\textbf{Prof. Dr. Nome 1} \\ Instituição}
+\assinatura{\textbf{Prof. Dr. Nome 2} \\ Instituição}
+\end{folhadeaprovacao}
+
+% Dedicatória (opcional)
+\begin{dedicatoria}
+\vspace*{\fill}
+\centering
+\noindent
+\textit{Dedicatória ao [pessoa/grupo].}
+\vspace*{\fill}
+\end{dedicatoria}
+
+% Agradecimentos (opcional)
+\begin{agradecimentos}
+Agradeço à orientadora, à banca, à CAPES (processo nº \textit{X}),
+ao CNPq (processo nº \textit{Y}), e à minha família.
+\end{agradecimentos}
+
+% Epígrafe (opcional)
+\begin{epigrafe}
+\vspace*{\fill}
+\begin{flushright}
+\textit{``Citação que inspira o trabalho.''} \\
+(AUTOR, 2020, p. 25)
+\end{flushright}
+\end{epigrafe}
+
+% Resumo
+\setlength{\absparsep}{18pt}
+\begin{resumo}
+\noindent O presente trabalho objetivou [objetivo geral]. Adotou-se
+[tipo de pesquisa]. Foram coletados [dados]. Os resultados indicaram
+[achado]. Conclui-se que [síntese].
+
+\noindent\textbf{Palavras-chave}: termo 1; termo 2; termo 3;
+termo 4; termo 5.
+\end{resumo}
+
+% Abstract
+\begin{resumo}[Abstract]
+\begin{otherlanguage*}{english}
+\noindent This work objective was [...]. The methodology adopted
+was [...]. Data were collected through [...]. Results indicated
+[...]. It is concluded that [...].
+
+\noindent\textbf{Keywords}: term 1; term 2; term 3; term 4; term 5.
+\end{otherlanguage*}
+\end{resumo}
+
+% Listas (figuras, tabelas, abreviaturas)
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+% Sumário
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ─── TEXTUAIS ──────────────────────────────────────
+\textual
+
+% Capítulo 1: Introdução
+\chapter{INTRODUÇÃO}
+\label{cap:intro}
+
+\section{Contexto e motivação}
+[Texto da contextualização. Citação como exemplo: \citeonline{gil2017}.]
+
+\section{Problema de pesquisa}
+[Pergunta de pesquisa.]
+
+\section{Objetivos}
+\subsection{Objetivo geral}
+[Verbo no infinitivo + objeto + condição].
+
+\subsection{Objetivos específicos}
+\begin{enumerate}[label=\alph*)]
+\item [Verbo + objeto];
+\item [Verbo + objeto];
+\item [Verbo + objeto].
+\end{enumerate}
+
+\section{Justificativa}
+[Texto.]
+
+\section{Estrutura do trabalho}
+[Texto.]
+
+% Capítulo 2: Referencial Teórico
+\chapter{REFERENCIAL TEÓRICO}
+\label{cap:teorico}
+
+\section{[Conceito-chave 1]}
+[Discussão. Exemplo de citação: \cite{minayo2014}.]
+
+\section{[Conceito-chave 2]}
+[Discussão.]
+
+% Capítulo 3: Metodologia
+\chapter{METODOLOGIA}
+\label{cap:metodo}
+
+\section{Tipo e abordagem}
+A pesquisa caracteriza-se como [tipo]\dots
+\citeonline{gil2017}.
+
+\section{Sujeitos / corpus}
+[Descrição.]
+
+\section{Procedimentos de coleta}
+[Descrição.]
+
+\section{Procedimentos de análise}
+[Descrição. Análise de Conteúdo conforme \citeonline{bardin2011}.]
+
+\section{Aspectos éticos}
+[CAAE, TCLE, LGPD.]
+
+% Capítulo 4: Resultados e Discussão
+\chapter{RESULTADOS E DISCUSSÃO}
+\label{cap:resultados}
+
+\section{[Eixo temático 1]}
+[Apresentação dos resultados.]
+
+\section{[Eixo temático 2]}
+[Apresentação.]
+
+% Capítulo 5: Considerações finais
+\chapter{CONSIDERAÇÕES FINAIS}
+\label{cap:conclusao}
+
+[Síntese, contribuições, limitações, agenda futura.]
+
+% ─── PÓS-TEXTUAIS ──────────────────────────────────
+\postextual
+
+% Referências
+\bibliography{referencias}
+
+% Apêndices
+\begin{apendicesenv}
+\partapendices
+
+\chapter{ROTEIRO DE ENTREVISTA}
+[Conteúdo do apêndice.]
+
+\end{apendicesenv}
+
+% Anexos
+\begin{anexosenv}
+\partanexos
+
+\chapter{PARECER COMITÊ DE ÉTICA}
+[Conteúdo do anexo.]
+
+\end{anexosenv}
+
+\end{document}
