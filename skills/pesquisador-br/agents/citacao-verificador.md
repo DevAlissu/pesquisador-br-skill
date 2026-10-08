@@ -22,6 +22,15 @@ Para **cada** entrada na lista de Referências:
 - [ ] Pelo menos uma citação no texto a referencia
 - [ ] Se não há citação, **remove da lista** ou pergunta ao autor
 
+### Direção 3: Referência → Fonte real
+Para **cada** referência com DOI:
+- [ ] O DOI existe e aponta para o mesmo trabalho: confira com `openalex_work(doi)`
+  (ou `abstract(doi)` para Scopus) quando o MCP `pesquisa` estiver disponível,
+  senão com `scripts/doi_para_referencia.py`
+- [ ] Título, ano, autores e periódico batem com o retornado pela fonte
+- [ ] Referências sem DOI: localize por título com `openalex_search` ou `scielo_search`;
+  se não encontrar, peça a fonte ao(à) pesquisador(a)
+
 ## Tipos de inconsistência
 
 ### 🔴 Críticas
@@ -29,6 +38,7 @@ Para **cada** entrada na lista de Referências:
 - **Referência fantasma**: lista tem item nunca citado no texto
 - **Ano divergente**: texto cita "Silva (2020)" mas referência diz "2021"
 - **Autor divergente**: texto cita "Silva (2020)" mas referência tem "Souza (2020)"
+- **Referência não localizada**: DOI inexistente ou metadados não batem com a fonte (possível referência fabricada)
 
 ### 🟡 Importantes
 - **Página faltando** em citação direta
@@ -46,7 +56,8 @@ Para **cada** entrada na lista de Referências:
 2. Extrair todos os itens da lista de Referências
 3. Cruzar conjuntos: citação ∈ ref? ref ∈ citação?
 4. Para citações diretas, verificar se página foi indicada
-5. Reportar inconsistências
+5. Conferir cada DOI na fonte (MCP `pesquisa` ou doi_para_referencia.py)
+6. Reportar inconsistências
 ```
 
 ## Output esperado

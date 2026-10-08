@@ -33,6 +33,25 @@
 6. **Semantic Scholar** — gratuito, com API
 7. **CrossRef** — busca por DOI
 
+## Execução da busca com o MCP `pesquisa`
+
+Se as ferramentas `mcp__pesquisa__*` estiverem disponíveis, execute as strings da
+Etapa 1 nelas (detalhes em `references/plataformas/mcp-pesquisa.md`):
+
+| Base | Ferramenta |
+|---|---|
+| SciELO Brasil | `scielo_search(query, collection="scl", years="AAAA-AAAA")` |
+| Produção BR em outras editoras | `openalex_search(query, country="BR", year_from=..., year_to=...)` |
+| Scopus (Periódicos CAPES) | `scopus_search('TITLE-ABS-KEY(...) AND PUBYEAR > AAAA')` |
+| BDTD | `scripts/busca_bdtd.py` (o MCP não cobre teses) |
+
+- Ordene por citações (`cited` / `-citedby-count`) para achar os clássicos e por data
+  (`recent` / `-coverDate`) para o estado atual.
+- Triagem por título + resumo com os resumos que já vêm na busca; use `openalex_work`
+  ou `abstract` quando faltar resumo.
+- Deduplique por DOI e anote a base de origem de cada trabalho.
+- Sem MCP, faça a busca guiada abaixo e informe que foi manual.
+
 ## Estratégia de busca
 
 ### Etapa 1: Definição de strings
@@ -106,9 +125,12 @@ Quando terminar a revisão, devolve:
 ## 📚 Mapeamento da literatura
 
 ### 1. Strings utilizadas
-- SciELO: [string]
-- Periódicos CAPES: [string]
+- SciELO: [string] — [data] — [N resultados]
+- Periódicos CAPES / Scopus: [string] — [data] — [N resultados]
+- OpenAlex (se MCP): [string + filtros] — [data] — [N resultados]
+- BDTD: [string] — [data] — [N resultados]
 - Google Scholar: [string]
+- Busca via: MCP `pesquisa` / manual
 
 ### 2. Critérios
 - Período: 2018-2026

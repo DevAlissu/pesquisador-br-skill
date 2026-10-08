@@ -24,7 +24,7 @@
       "name": "pesquisador-br-skill",
       "source": "./",
       "description": "Pipeline completo de pesquisa acadêmica brasileira (ABNT, Qualis CAPES, plataformas BR)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Alison Silva (DevAlissu)",
         "email": "alison.silva8741@gmail.com"

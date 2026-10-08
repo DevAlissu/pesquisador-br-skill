@@ -1,7 +1,7 @@
 ---
 name: revisao-sistematica-br
 description: Conduz revisão sistemática brasileira seguindo PRISMA-PT, ou revisão integrativa modelo Botelho et al. Aciona quando usuário pede "revisão sistemática", "PRISMA", "revisão integrativa", "metanálise" no contexto brasileiro.
-version: 0.1.0
+version: 0.2.0
 language: pt-BR
 related_skills:
   - pesquisador-br
@@ -125,6 +125,20 @@ PubMed (se Saúde):
 ("blended learning"[MeSH] OR "hybrid education")
 AND ("higher education"[MeSH])
 ```
+
+### Execução das buscas com o MCP `pesquisa`
+
+Se as ferramentas `mcp__pesquisa__*` estiverem disponíveis, rode as strings do protocolo
+nelas (guia: `../pesquisador-br/references/plataformas/mcp-pesquisa.md`):
+- SciELO: `scielo_search` (some as páginas para obter o total; a ferramenta não informa)
+- Scopus: `scopus_search` (retorna `total`)
+- OpenAlex: `openalex_search` (retorna `total`; use `country="BR"` para recorte nacional)
+- BDTD: `scripts/busca_bdtd.py`
+
+Para cada busca, registre no protocolo **base, string exata, filtros, data e total**: esses
+números alimentam a fase de Identificação do diagrama PRISMA. Deduplique por DOI e
+registre quantas duplicatas foram removidas. Buscas feitas manualmente devem ser
+identificadas como tal no relatório.
 
 ### Etapa 4: Triagem (3 fases)
 

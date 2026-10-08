@@ -1,7 +1,7 @@
 ---
 name: tcc-abnt
 description: Pipeline focado em geração de TCC de graduação completo conforme NBR 14724:2011, com todas as seções (pré-textuais, textuais, pós-textuais), formatação ABNT e revisão por capítulo. Aciona quando o usuário precisa especificamente de "TCC", "trabalho de conclusão", ou "monografia de graduação". Para artigo, dissertação ou tese, delega para pesquisador-br.
-version: 0.1.0
+version: 0.2.0
 language: pt-BR
 related_skills:
   - pesquisador-br
@@ -47,6 +47,8 @@ Use `tcc-abnt` quando o usuário tem certeza que está fazendo TCC. Para qualque
 5. PRÉ-TEXTUAIS    → capa, folha de rosto, folha de aprovação,
                      resumo (PT+EN), sumário, listas
 6. PÓS-TEXTUAIS    → referências (NBR 6023), apêndices, anexos
+                     (com o MCP `pesquisa`: conferir cada DOI e completar
+                     dados faltantes com `openalex_work` antes de formatar)
 7. REVISÃO ABNT    → conferência de NBR 14724/6023/10520
 8. SIMULAÇÃO BANCA → 3 perguntas que a banca poderia fazer
 ```

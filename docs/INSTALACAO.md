@@ -115,6 +115,24 @@ A skill **não exige variáveis de ambiente** pra funcionar — todos os scripts
 
 Se quiser usar a skill com Claude API direto (fora do Claude Code), aí sim precisa de `ANTHROPIC_API_KEY` — mas isso é uso avançado, não requisito.
 
+### Opcional: servidor MCP `pesquisa`
+
+Com o servidor MCP `pesquisa` instalado, as skills buscam no SciELO, OpenAlex, Scopus e
+ScienceDirect por API e conferem cada DOI das referências. Instalação (Windows, macOS ou
+Linux), com [uv](https://docs.astral.sh/uv/):
+
+```bash
+git clone https://github.com/IgorAlv/desktop-tutorial
+cd desktop-tutorial
+uv run --no-project scripts/instalar.py
+```
+
+Chaves (opcionais, como variáveis de ambiente antes de rodar o instalador):
+`ELSEVIER_API_KEY` (Scopus/ScienceDirect, gratuita em https://dev.elsevier.com) e
+`OPENALEX_API_KEY` (cota maior no OpenAlex). SciELO não precisa de chave. Confira no Claude
+Code com `/mcp`: deve aparecer `pesquisa`. Detalhes em
+`skills/pesquisador-br/references/plataformas/mcp-pesquisa.md`.
+
 ### Scripts Python
 
 Pra usar os scripts utilitários:

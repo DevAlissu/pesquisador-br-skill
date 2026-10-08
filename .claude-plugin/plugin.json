@@ -1,7 +1,7 @@
 {
   "name": "pesquisador-br-skill",
   "description": "Skill brasileira de pesquisa acadêmica — ABNT, Qualis CAPES, Lattes, SciELO, BDTD, Periódicos CAPES",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Alison Silva (DevAlissu)",
     "email": "alison.silva8741@gmail.com"

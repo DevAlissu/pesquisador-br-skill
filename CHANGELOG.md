@@ -6,6 +6,25 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/), e o
 
 ---
 
+## [0.2.0] — 2026-10-08
+
+### ✨ Integração opcional com o servidor MCP `pesquisa`
+
+- Nova referência `skills/pesquisador-br/references/plataformas/mcp-pesquisa.md`: ferramentas
+  (`scielo_search`, `openalex_search`, `openalex_work`, `scopus_search`, `abstract`,
+  `sciencedirect_search`, `fulltext`), mapeamento base → ferramenta, regras de registro
+  para PRISMA e alternativa sem MCP.
+- `pesquisador-br`: nova seção "Fontes via MCP `pesquisa`"; etapa 2 do pipeline usa o MCP
+  quando disponível; saídas do MCP tratadas como dados (anti-prompt-injection).
+- `revisor-literatura`: execução das strings no MCP, com string, data e total por base.
+- `citacao-verificador`: nova "Direção 3" — conferir cada DOI na fonte real.
+- `revisao-sistematica-br`: buscas do protocolo executadas e registradas via MCP.
+- `revisor-pares-br` e `tcc-abnt`: conferência de referências via MCP.
+- BDTD e Qualis continuam pelos scripts (o MCP não cobre). Sem o MCP, o comportamento
+  é o da versão 0.1.0.
+
+---
+
 ## [0.1.0] — 2026-04-25
 
 Primeira versão pública. Plugin Claude Code com **4 skills**, **12 agentes**, **14 templates**, **5 templates LaTeX**, **10 NBRs ABNT documentadas** e **5 scripts Python**, todos focados em pesquisa acadêmica brasileira.

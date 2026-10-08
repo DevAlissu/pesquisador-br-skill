@@ -1,7 +1,7 @@
 ---
 name: revisor-pares-br
 description: Simula revisão por pares (peer review) no padrão de revistas brasileiras Qualis A. Aciona quando o usuário pede "revisão por pares", "peer review", "parecer ad hoc", "simular avaliador", ou quer auto-revisão antes de submeter manuscrito a periódico ou evento. Devolve parecer estruturado com decisão (aceite, revisões maiores, revisões menores, rejeição), comentários numerados e sugestões.
-version: 0.1.0
+version: 0.2.0
 language: pt-BR
 related_skills:
   - pesquisador-br
@@ -182,7 +182,9 @@ Após avaliar as 6 dimensões, devolva **uma das decisões**:
 - Sugestões genéricas ("melhorar redação") sem apontar onde
 - Aceitar tudo só pra ser legal
 - Rejeitar por preconceito (área, instituição, autor)
-- Inventar literatura ("autor não cita Silva 2020" quando você não conferiu)
+- Inventar literatura ("autor não cita Silva 2020" quando você não conferiu).
+  Com o MCP `pesquisa` disponível, confira a literatura que sugerir e as referências do
+  manuscrito com `openalex_work` / `scielo_search` antes de citá-las no parecer
 - Ignorar pontos fortes — todo manuscrito tem algo bom
 
 ---
